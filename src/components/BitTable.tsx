@@ -12,9 +12,6 @@ import {
 import BitRowTable from './BitRowTable';
 import MapBit from './interfaces/MapBit';
 
-import mapBitElo from './MapBitsElo';
-import mapBitVisa from './MapBitsVisa';
-
 const StyledTableCell = withStyles((theme: Theme) =>
   createStyles({
     head: {
@@ -25,31 +22,23 @@ const StyledTableCell = withStyles((theme: Theme) =>
   })
 )(TableCell);
 
-// Tabela dos bits da mensagem
-let mapBit: MapBit[];
-
 interface BitProps {
   bandeira: string;
-  bits: { content: string | number }[];
+  bits: MapBit[];
   setBits: CallableFunction;
 }
 
 class BitTable extends React.PureComponent<BitProps> {
-  constructor(props: BitProps) {
-    super(props);
-
-    // Importar os bits da mensagem
-    if (this.props.bandeira === 'visa') {
-      mapBit = mapBitVisa;
-    } else {
-      mapBit = mapBitElo;
-    }
-  }
-
-  handleChange = (bit: number, content: string | number) => {
-    let newBits = [...this.props.bits];
-    newBits[bit].content = content;
-    this.props.setBits(newBits);
+  handleChange = (index: number, content: string | number) => {
+    this.props.setBits(
+      this.props.bits.map((bit, index2) => {
+        if (index === index2) {
+          return { ...bit, content: content };
+        } else {
+          return bit;
+        }
+      })
+    );
   };
 
   render() {
@@ -95,15 +84,12 @@ class BitTable extends React.PureComponent<BitProps> {
                 />
               </TableCell>
             </TableRow>
-            {mapBit.map((row: MapBit) => (
+            {this.props.bits.map((row: MapBit, index: number) => (
               <BitRowTable
                 key={row.bit}
+                index={index}
                 bit={row}
-                content={
-                  this.props.bits[row.bit]
-                    ? this.props.bits[row.bit].content
-                    : ''
-                }
+                content={row.content}
                 handleChange={this.handleChange}
               />
             ))}

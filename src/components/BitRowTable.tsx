@@ -10,15 +10,16 @@ interface BitRowProps {
   bit: MapBit;
   handleChange: CallableFunction;
   content: {};
+  index: number;
 }
 
 function BitRowTable(props: BitRowProps) {
-  const { bit, content } = props;
+  const { bit, content, index, handleChange } = props;
 
   return (
     <TableRow>
       <TableCell>
-        <Checkbox />
+        <Checkbox checked={bit.checked} />
       </TableCell>
       <TableCell>{bit.bit}</TableCell>
       <TableCell>{bit.descricao}</TableCell>
@@ -47,8 +48,8 @@ function BitRowTable(props: BitRowProps) {
           value={content}
           onChange={e => {
             const tam = bit.formato === 'B' || bit.formato === 'AB' ? bit.tamanho * 2 : bit.tamanho;
-            const value = e.target.value.toString().slice(0, tam)
-            props.handleChange(bit.bit, value);
+            const value = e.target.value.toString().slice(0, tam);
+            handleChange(index, value);
           }}
         />
       </TableCell>

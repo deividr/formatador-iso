@@ -2,22 +2,23 @@ import React, { useState } from 'react';
 import Header from '../components/Header';
 import Cabecalho from '../components/Cabecalho';
 import BitTable from '../components/BitTable';
+import MapBit from '../components/interfaces/MapBit';
+import mapBitElo from '../components/MapBitsElo';
 
 export default () => {
   const [msgIso, setMsgIso] = useState('');
-  const [bits, setBits] = useState([
-    { content: '' },
-    {
-      content: 'Esse é o bit 1'
-    },
-    {
-      content: 64654654654654
-    }
-  ]);
 
-  const desmembrar = () => {
-    console.log(bits[1].content);
-  };
+  const initialList = mapBitElo.map<MapBit>((bit: any) => {
+    bit.content = '';
+    bit.checked = false;
+    return bit;
+  });
+
+  const [bits, setBits] = useState(initialList);
+  const [codigoMensagem, setCodigoMensagem] = useState('');
+  const [primeiroMapaBits, setPrimeiroMapaBits] = useState('');
+
+  const desmembrar = () => {};
 
   return (
     <div className="elo-container">
