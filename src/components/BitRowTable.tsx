@@ -9,17 +9,16 @@ import MapBit from './interfaces/MapBit';
 interface BitRowProps {
   bit: MapBit;
   handleChange: CallableFunction;
-  content: {};
   index: number;
 }
 
 function BitRowTable(props: BitRowProps) {
-  const { bit, content, index, handleChange } = props;
+  const { bit, index, handleChange } = props;
 
   return (
     <TableRow>
       <TableCell>
-        <Checkbox checked={bit.checked} />
+        <Checkbox name="checked" checked={bit.checked} onChange={e => handleChange(index, e)} />
       </TableCell>
       <TableCell>{bit.bit}</TableCell>
       <TableCell>{bit.descricao}</TableCell>
@@ -32,10 +31,8 @@ function BitRowTable(props: BitRowProps) {
             variant="outlined"
             margin="dense"
             fullWidth
-            onChange={e => {
-              const tam = bit.tipo === 'llvar' ? 2 : 3;
-              e.target.value = e.target.value.toString().slice(0, tam);
-            }}
+            disabled
+            value={bit.content.toString().length}
           />
         )}
       </TableCell>
@@ -44,13 +41,11 @@ function BitRowTable(props: BitRowProps) {
           variant="outlined"
           margin="dense"
           fullWidth
+          name="content"
+          error={bit.error}
           type={bit.formato === 'N' ? 'number' : 'text'}
-          value={content}
-          onChange={e => {
-            const tam = bit.formato === 'B' || bit.formato === 'AB' ? bit.tamanho * 2 : bit.tamanho;
-            const value = e.target.value.toString().slice(0, tam);
-            handleChange(index, value);
-          }}
+          value={bit.content}
+          onChange={e => handleChange(index, e)}
         />
       </TableCell>
     </TableRow>

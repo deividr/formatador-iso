@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { ChangeEvent } from 'react';
 import { Theme, withStyles, createStyles } from '@material-ui/core/styles';
 import {
   Table,
@@ -26,14 +26,30 @@ interface BitProps {
   bandeira: string;
   bits: MapBit[];
   setBits: CallableFunction;
+  codigoMensagem: number;
+  setCodigoMensagem: CallableFunction;
+  primeiroMapaBits: string;
+  setPrimeiroMapaBits: CallableFunction;
 }
 
 class BitTable extends React.PureComponent<BitProps> {
-  handleChange = (index: number, content: string | number) => {
+  handleChange = (index: number, e: ChangeEvent<any>) => {
+    const target = e.target;
+    let value = target.type === 'checkbox' ? target.checked : target.value;
+    const name = target.name;
+
+    const bit = this.props.bits[index];
+
+    const tam = bit.formato === 'B' || bit.formato === 'AB' ? bit.tamanho * 2 : bit.tamanho;
+    value = value.toString().slice(0, tam);
+
+    let error =
+      (bit.tipo === 'fixo' && value.length < tam) || (bit.tipo !== 'fixo' && value.length === 0);
+
     this.props.setBits(
       this.props.bits.map((bit, index2) => {
         if (index === index2) {
-          return { ...bit, content: content };
+          return { ...bit, [name]: value, error: error };
         } else {
           return bit;
         }
@@ -42,6 +58,8 @@ class BitTable extends React.PureComponent<BitProps> {
   };
 
   render() {
+    const { codigoMensagem, setCodigoMensagem, primeiroMapaBits, setPrimeiroMapaBits } = this.props;
+
     return (
       <Box boxShadow={1} marginTop={2} padding={2}>
         <Table size="small">
@@ -66,7 +84,8 @@ class BitTable extends React.PureComponent<BitProps> {
                   variant="outlined"
                   margin="dense"
                   fullWidth
-                  onChange={e => (e.target.value = e.target.value.toString().slice(0, 4))}
+                  value={codigoMensagem}
+                  onChange={e => setCodigoMensagem(e.target.value.toString().slice(0, 4))}
                 />
               </TableCell>
             </TableRow>
@@ -80,18 +99,13 @@ class BitTable extends React.PureComponent<BitProps> {
                   variant="outlined"
                   margin="dense"
                   fullWidth
-                  onChange={e => (e.target.value = e.target.value.toString().slice(0, 16))}
+                  value={primeiroMapaBits}
+                  onChange={e => setPrimeiroMapaBits(e.target.value.toString().slice(0, 16))}
                 />
               </TableCell>
             </TableRow>
             {this.props.bits.map((row: MapBit, index: number) => (
-              <BitRowTable
-                key={row.bit}
-                index={index}
-                bit={row}
-                content={row.content}
-                handleChange={this.handleChange}
-              />
+              <BitRowTable key={row.bit} index={index} bit={row} handleChange={this.handleChange} />
             ))}
           </TableBody>
         </Table>

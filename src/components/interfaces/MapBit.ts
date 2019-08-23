@@ -6,4 +6,5 @@ export default interface MapBit {
   descricao: string;
   content: string | number;
   checked: boolean;
+  error: boolean;
 }
