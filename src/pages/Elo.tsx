@@ -21,8 +21,6 @@ export default () => {
 
   const desmembrar = () => {};
 
-  
-
   return (
     <div className="elo-container">
       <Header bandeira="elo" />

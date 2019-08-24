@@ -1,9 +1,7 @@
 import React from 'react';
 
-import TableRow from '@material-ui/core/TableRow';
-import TableCell from '@material-ui/core/TableCell';
-import TextField from '@material-ui/core/TextField';
-import Checkbox from '@material-ui/core/Checkbox';
+import { TableRow, TableCell, TextField } from '@material-ui/core';
+
 import MapBit from './interfaces/MapBit';
 
 interface BitRowProps {
@@ -13,13 +11,10 @@ interface BitRowProps {
 }
 
 function BitRowTable(props: BitRowProps) {
-  const { bit, index, handleChange } = props;
+  const { bit, handleChange } = props;
 
   return (
     <TableRow>
-      <TableCell>
-        <Checkbox name="checked" checked={bit.checked} onChange={e => handleChange(index, e)} />
-      </TableCell>
       <TableCell>{bit.bit}</TableCell>
       <TableCell>{bit.descricao}</TableCell>
       <TableCell>
@@ -45,7 +40,7 @@ function BitRowTable(props: BitRowProps) {
           error={bit.error}
           type={bit.formato === 'N' ? 'number' : 'text'}
           value={bit.content}
-          onChange={e => handleChange(index, e)}
+          onChange={e => handleChange(bit, e)}
         />
       </TableCell>
     </TableRow>
