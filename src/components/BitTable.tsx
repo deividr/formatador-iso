@@ -33,10 +33,10 @@ interface BitTableProps {
   bandeira: string;
   bits: MapBit[];
   setBits: CallableFunction;
-  codigoMensagem: number;
-  setCodigoMensagem: CallableFunction;
-  primeiroMapaBits: string;
-  setPrimeiroMapaBits: CallableFunction;
+  codigoMensagem: { content: string; error: boolean };
+  handleChangeCodigo: CallableFunction;
+  primeiroMapaBits: { content: string; error: boolean };
+  handleChange1Mapa: CallableFunction;
 }
 
 class BitTable extends React.PureComponent<BitTableProps, { open: boolean }> {
@@ -65,23 +65,23 @@ class BitTable extends React.PureComponent<BitTableProps, { open: boolean }> {
     );
   };
 
+  handleClickOpen = () => {
+    this.setState({ open: true });
+  };
+
+  handleClose = () => {
+    this.setState({ open: false });
+  };
+
   render() {
     const {
       bits,
       setBits,
       codigoMensagem,
-      setCodigoMensagem,
+      handleChangeCodigo,
       primeiroMapaBits,
-      setPrimeiroMapaBits
+      handleChange1Mapa
     } = this.props;
-
-    const handleClickOpen = () => {
-      this.setState({ open: true });
-    };
-
-    const handleClose = () => {
-      this.setState({ open: false });
-    };
 
     return (
       <React.Fragment>
@@ -102,12 +102,13 @@ class BitTable extends React.PureComponent<BitTableProps, { open: boolean }> {
                 <TableCell>4</TableCell>
                 <TableCell>
                   <TextField
-                    type="number"
                     variant="outlined"
                     margin="dense"
                     fullWidth
-                    value={codigoMensagem}
-                    onChange={e => setCodigoMensagem(e.target.value.toString().slice(0, 4))}
+                    inputProps={{ maxLength: 4 }}
+                    error={codigoMensagem.error}
+                    value={codigoMensagem.content}
+                    onChange={e => handleChangeCodigo(e.target.value)}
                   />
                 </TableCell>
               </TableRow>
@@ -120,15 +121,18 @@ class BitTable extends React.PureComponent<BitTableProps, { open: boolean }> {
                     variant="outlined"
                     margin="dense"
                     fullWidth
-                    value={primeiroMapaBits}
-                    onChange={e => setPrimeiroMapaBits(e.target.value.toString().slice(0, 16))}
+                    error={primeiroMapaBits.error}
+                    value={primeiroMapaBits.content}
+                    onChange={e => handleChange1Mapa(e.target.value)}
+                    inputProps={{ maxLength: 16 }}
+                    //eslint-disable-next-line
                     InputProps={{
                       endAdornment: (
                         <InputAdornment position="end">
                           <IconButton
                             edge="end"
                             aria-label="toggle password visibility"
-                            onClick={handleClickOpen}>
+                            onClick={this.handleClickOpen}>
                             <Menu color="secondary" />
                           </IconButton>
                         </InputAdornment>
@@ -154,7 +158,7 @@ class BitTable extends React.PureComponent<BitTableProps, { open: boolean }> {
           open={this.state.open}
           bits={bits}
           setBitsChecked={setBits}
-          onClose={handleClose}
+          onClose={this.handleClose}
         />
       </React.Fragment>
     );
