@@ -36,11 +36,19 @@ function BitRowTable(props: BitRowProps) {
           variant="outlined"
           margin="dense"
           fullWidth
+          inputProps={{
+            maxLength: bit.formato === 'B' || bit.formato === 'AB' ? bit.tamanho * 2 : bit.tamanho
+          }}
           name="content"
           error={bit.error}
-          type={bit.formato === 'N' ? 'number' : 'text'}
           value={bit.content}
-          onChange={e => handleChange(bit, e)}
+          onChange={e => {
+            if (bit.formato === "N") {
+              const patt = new RegExp('[^0-9]');
+              if (patt.test(e.target.value)) return;
+            }
+            bit.bit === 1 ? handleChange(e.target.value) : handleChange(e, bit);
+          }}
         />
       </TableCell>
     </TableRow>

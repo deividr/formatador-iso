@@ -4,7 +4,7 @@ export default interface MapBit {
   formato: string;
   tamanho: number;
   descricao: string;
-  content: string | number;
+  content: string;
   checked: boolean;
   error: boolean;
 }
