@@ -14,6 +14,7 @@ import {
 } from '@material-ui/core';
 
 import MapBit from './interfaces/MapBit';
+import { gerarMapaDeBits } from './FuncoesComuns';
 
 export interface DialogBitProps {
   open: boolean;
@@ -30,32 +31,17 @@ const DialogBit = (props: DialogBitProps) => {
   const handleToggle = (value: MapBit) => () => {
     const currentIndex = bits.indexOf(value);
 
-    let newbits = [...bits];
+    let newBits = [...bits];
 
-    newbits[currentIndex] = { ...newbits[currentIndex], checked: !newbits[currentIndex].checked };
+    newBits[currentIndex] = { ...newBits[currentIndex], checked: !newBits[currentIndex].checked };
     
-    const binario = new Array(128).fill("0");
-    
-    newbits.forEach(bit => {
-      binario[bit.bit - 1] = bit.checked ? 1 : 0;
-    });
-    
-    const hexa = convertToHexa(binario.join(''));
+    const hexa = gerarMapaDeBits(newBits);
     
     if (value.bit < 65) {
       handleChange1Mapa(hexa.slice(0, 16));
     } else {
       handleChange2Mapa(hexa.slice(16,));
-      /*
-      newbits[0] = {...newbits[0], content: hexa.slice(16,)};
-      setBits(newbits);
-      */
     }
-  };
-
-  const convertToHexa = (value: string) => {
-    const array = value.match(/.{1,4}/g) as RegExpMatchArray;
-    return array.map(value => parseInt(value, 2).toString(16)).join('');
   };
 
   return (

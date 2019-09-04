@@ -37,6 +37,7 @@ interface BitTableProps {
   setCodigoMensagem: CallableFunction;
   primeiroMapaBits: { content: string; error: boolean };
   setPrimeiroMapaBits: CallableFunction;
+  setCheckedBits: CallableFunction;
 }
 
 class BitTable extends React.PureComponent<BitTableProps, { open: boolean }> {
@@ -65,10 +66,10 @@ class BitTable extends React.PureComponent<BitTableProps, { open: boolean }> {
 
     this.props.setPrimeiroMapaBits({ content: value, error: error });
 
-    if (!error) this.setCheckedBits(value, this.props.bits);
+    if (!error) this.props.setCheckedBits(value, this.props.bits);
   };
 
-  handleChange2Mapa = (value : string) => {
+  handleChange2Mapa = (value: string) => {
     value = value.toUpperCase();
 
     const patt = new RegExp('[^0-9ABCDEF]');
@@ -85,40 +86,11 @@ class BitTable extends React.PureComponent<BitTableProps, { open: boolean }> {
      * Se o primeiro e segundo mapa de bits estão ok, então reformata a lista de bits.
      */
     if (!error && !this.props.primeiroMapaBits.error) {
-      this.setCheckedBits(this.props.primeiroMapaBits.content, newBits);
+      this.props.setCheckedBits(this.props.primeiroMapaBits.content, newBits);
       return;
     }
     this.props.setBits(newBits);
   };
-
-  // Setar os bits que foram ligados como 'checked = true';
-  setCheckedBits = (value: string, newBits: MapBit[]) => {
-    let binario = this.convertToBinario(value);
-
-    // Verificar se o segundo mapa de bits está selecionado e não está com erro;
-    binario[0] === '1' && !newBits[0].error
-      ? (binario = binario.concat(this.convertToBinario(newBits[0].content)))
-      : (binario = binario.concat(this.convertToBinario('0000000000000000')));
-
-    this.props.setBits(
-      newBits.map(bit => {
-        if (binario[bit.bit - 1] === '1') {
-          return { ...bit, checked: true };
-        }
-        return { ...bit, checked: false, content: '', error: true };
-      })
-    );
-  };
-
-  convertToBinario = (value: string) =>
-    [].map
-      .call(value, byte =>
-        parseInt(byte, 16)
-          .toString(2)
-          .padStart(4, '0')
-      )
-      .join('')
-      .split('');
 
   handleChange = (e: ChangeEvent<any>, bit: MapBit) => {
     let { value, name, maxLength } = e.target;
@@ -138,7 +110,7 @@ class BitTable extends React.PureComponent<BitTableProps, { open: boolean }> {
       } else {
         return bitAtual;
       }
-    })
+    });
 
     this.props.setBits(newBits);
   };
