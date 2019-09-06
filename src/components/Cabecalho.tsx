@@ -29,7 +29,7 @@ interface CabecalhoProps {
   handlerAnularInput: () => void;
   handlerSetViaYMRB: (checked: boolean) => void;
   colunas: number;
-  viaYMRB: boolean;
+  viaYMRB?: boolean;
   setColunas: (colunas: number) => void;
   msgIso: string;
   setMsgIso: (mensagem: string) => void;
@@ -77,14 +77,16 @@ const Cabecalho = (props: CabecalhoProps) => {
             value={colunas}
             onChange={e => setColunas(parseInt(e.target.value))}
           />
-          <Tooltip title="Indica que string é entrada do YMRB, por tanto o bit 52 tem tamanho de 8">
-            <FormControlLabel
-              control={
-                <Checkbox value={viaYMRB} onChange={e => handlerSetViaYMRB(e.target.checked)} />
-              }
-              label="YMRB"
-            />
-          </Tooltip>
+          {viaYMRB !== undefined && (
+            <Tooltip title="Indica que string é entrada do YMRB, por tanto o bit 52 tem tamanho de 8">
+              <FormControlLabel
+                control={
+                  <Checkbox value={viaYMRB} onChange={e => handlerSetViaYMRB(e.target.checked)} />
+                }
+                label="YMRB"
+              />
+            </Tooltip>
+          )}
         </Grid>
       </Grid>
       <Button

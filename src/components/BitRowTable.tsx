@@ -11,6 +11,7 @@ interface BitRowProps {
 }
 
 function BitRowTable(props: BitRowProps) {
+  const patt = new RegExp('[^0-9]');
   const { bit, handleChange } = props;
 
   return (
@@ -43,8 +44,7 @@ function BitRowTable(props: BitRowProps) {
           error={bit.error}
           value={bit.content}
           onChange={e => {
-            if (bit.formato === "N") {
-              const patt = new RegExp('[^0-9]');
+            if (bit.formato === 'N' || bit.formato === 'P') {
               if (patt.test(e.target.value)) return;
             }
             bit.bit === 1 ? handleChange(e.target.value) : handleChange(e, bit);

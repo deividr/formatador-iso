@@ -41,14 +41,18 @@ interface BitTableProps {
 }
 
 class BitTable extends React.PureComponent<BitTableProps, { open: boolean }> {
+  pattHexa: RegExp;
+  pattNumber: RegExp;
+
   constructor(props: BitTableProps) {
     super(props);
     this.state = { open: false };
+    this.pattHexa = new RegExp('[^0-9ABCDEF]');
+    this.pattNumber = new RegExp('[^0-9]');
   }
 
   handleChangeCodigo = (value: string) => {
-    const patt = new RegExp('[^0-9]');
-    if (patt.test(value)) return;
+    if (this.pattNumber.test(value)) return;
 
     const error = value.length < 4;
 
@@ -58,9 +62,7 @@ class BitTable extends React.PureComponent<BitTableProps, { open: boolean }> {
   handleChange1Mapa = (value: string) => {
     value = value.toUpperCase();
 
-    const patt = new RegExp('[^0-9ABCDEF]');
-
-    if (patt.test(value)) return;
+    if (this.pattHexa.test(value)) return;
 
     const error = value.length < 16;
 
@@ -72,9 +74,7 @@ class BitTable extends React.PureComponent<BitTableProps, { open: boolean }> {
   handleChange2Mapa = (value: string) => {
     value = value.toUpperCase();
 
-    const patt = new RegExp('[^0-9ABCDEF]');
-
-    if (patt.test(value)) return;
+    if (this.pattHexa.test(value)) return;
 
     let error = value.length < 16 || value === '0000000000000000';
 
@@ -89,6 +89,7 @@ class BitTable extends React.PureComponent<BitTableProps, { open: boolean }> {
       this.props.setCheckedBits(this.props.primeiroMapaBits.content, newBits);
       return;
     }
+
     this.props.setBits(newBits);
   };
 
@@ -133,13 +134,14 @@ class BitTable extends React.PureComponent<BitTableProps, { open: boolean }> {
             <TableHead>
               <TableRow>
                 <StyledTableCell style={{ width: 10 }}>Bit</StyledTableCell>
-                <StyledTableCell style={{ width: 200 }}>Descrição</StyledTableCell>
+                <StyledTableCell style={{ width: 300 }}>Descrição</StyledTableCell>
                 <StyledTableCell style={{ width: 70 }}>Tamanho</StyledTableCell>
                 <StyledTableCell>Conteúdo</StyledTableCell>
               </TableRow>
             </TableHead>
             <TableBody>
-              <TableRow key="1000">
+              {this.props.children}
+              <TableRow key="cdMsg">
                 <TableCell />
                 <TableCell>Código da Mensagem</TableCell>
                 <TableCell>4</TableCell>
@@ -155,7 +157,7 @@ class BitTable extends React.PureComponent<BitTableProps, { open: boolean }> {
                   />
                 </TableCell>
               </TableRow>
-              <TableRow key="1001">
+              <TableRow key="priMapBits">
                 <TableCell />
                 <TableCell>Primeiro Mapa de Bits</TableCell>
                 <TableCell>16</TableCell>

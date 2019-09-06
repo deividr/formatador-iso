@@ -6,7 +6,7 @@ import MapBit from '../components/interfaces/MapBit';
 import mapBitElo from '../components/MapBitsElo';
 import Message from '../components/Message';
 import { Snackbar } from '@material-ui/core';
-import { gerarMapaDeBits } from '../components/FuncoesComuns';
+import { gerarMapaDeBits, hexa2Binario } from '../components/FuncoesComuns';
 
 export interface Mensagem {
   variant: 'error' | 'success' | 'warning' | 'info';
@@ -16,6 +16,12 @@ export interface Mensagem {
 export interface FieldDefault {
   content: string;
   error: boolean;
+}
+
+export interface StateDefault {
+  open: boolean;
+  msgIso: string;
+  bits: MapBit[];  
 }
 
 export default () => {
@@ -29,17 +35,17 @@ export default () => {
   });
 
   const queueRef = React.useRef<Mensagem[]>([]);
-  const [open, setOpen] = useState(false);
-  const [msgIso, setMsgIso] = useState('');
+  const [open, setOpen] = useState<boolean>(false);
+  const [msgIso, setMsgIso] = useState<string>('');
   const [bits, setBits] = useState<MapBit[]>(initialList);
   const [codigoMensagem, setCodigoMensagem] = useState<FieldDefault>({ content: '', error: true });
   const [primeiroMapaBits, setPrimeiroMapaBits] = useState<FieldDefault>({
     content: '',
     error: true
   });
-  const [colunas, setColunas] = useState(32);
-  const [viaYMRB, setViaYMRB] = useState(false);
-  const [bitsError, setBitsError] = useState(true);
+  const [colunas, setColunas] = useState<number>(32);
+  const [viaYMRB, setViaYMRB] = useState<boolean>(false);
+  const [bitsError, setBitsError] = useState<boolean>(true);
 
   const [mensagem, setMensagem] = useState<Mensagem | undefined>({
     variant: 'error',
@@ -112,7 +118,7 @@ export default () => {
     pos += 32;
 
     //Efetuar a conversão para binário considerando o segundo mapa de bits todo zerado.
-    let mapBits = hexToBinario(convertido + '0000000000000000');
+    let mapBits = hexa2Binario(convertido + '0000000000000000');
 
     let newBits = [...bits];
 
@@ -125,7 +131,7 @@ export default () => {
       pos += 32;
 
       //Reformata o mapa de bits completo com as informações do segundo mapa de bits.
-      mapBits = mapBits.slice(0, 64).concat(hexToBinario(convertido));
+      mapBits = mapBits.slice(0, 64).concat(hexa2Binario(convertido));
     }
 
     const bitsUndefined: number[] = [];
@@ -209,12 +215,12 @@ export default () => {
    * @param newBits Lista completa dos bits
    */
   const setCheckedBits = (value: string, newBits: MapBit[]) => {
-    let binario = hexToBinario(value);
+    let binario = hexa2Binario(value);
 
     // Verificar se o segundo mapa de bits está selecionado e não está com erro;
     binario[0] === '1' && !newBits[0].error
-      ? (binario = binario.concat(hexToBinario(newBits[0].content)))
-      : (binario = binario.concat(hexToBinario('0000000000000000')));
+      ? (binario = binario.concat(hexa2Binario(newBits[0].content)))
+      : (binario = binario.concat(hexa2Binario('0000000000000000')));
 
     handlerSetBits(
       newBits.map(bit => {
@@ -477,18 +483,6 @@ function convertAsciiToHex(txt_ascii: string) {
   }
 
   return txt_hex;
-}
-
-//Converter a String em HEX para Binário
-function hexToBinario(value: string) {
-  return [].map
-    .call(value, byte =>
-      parseInt(byte, 16)
-        .toString(2)
-        .padStart(4, '0')
-    )
-    .join('')
-    .split('');
 }
 
 //Irá formatar a input com o número de colunas informado no campo Colunas.
