@@ -1,8 +1,8 @@
-import React from 'react';
+import React, { ChangeEvent } from 'react';
 
 import { TableRow, TableCell, TextField } from '@material-ui/core';
 
-import MapBit from './interfaces/MapBit';
+import MapBit from './interfaces/Interfaces';
 
 interface BitRowProps {
   bit: MapBit;
@@ -10,7 +10,7 @@ interface BitRowProps {
   index: number;
 }
 
-function BitRowTable(props: BitRowProps) {
+function BitTableRow(props: BitRowProps): JSX.Element {
   const patt = new RegExp('[^0-9]');
   const { bit, handleChange } = props;
 
@@ -26,8 +26,8 @@ function BitRowTable(props: BitRowProps) {
             type="number"
             variant="outlined"
             margin="dense"
-            fullWidth
-            disabled
+            fullWidth={true}
+            disabled={true}
             value={bit.content.toString().length}
           />
         )}
@@ -36,16 +36,21 @@ function BitRowTable(props: BitRowProps) {
         <TextField
           variant="outlined"
           margin="dense"
-          fullWidth
+          fullWidth={true}
           inputProps={{
-            maxLength: bit.formato === 'B' || bit.formato === 'AB' ? bit.tamanho * 2 : bit.tamanho
+            maxLength:
+              bit.formato === 'B' || bit.formato === 'AB'
+                ? bit.tamanho * 2
+                : bit.tamanho,
           }}
           name="content"
           error={bit.error}
           value={bit.content}
-          onChange={e => {
+          onChange={(e: React.ChangeEvent<HTMLInputElement>): void => {
             if (bit.formato === 'N' || bit.formato === 'P') {
-              if (patt.test(e.target.value)) return;
+              if (patt.test(e.target.value)) {
+                return;
+              }
             }
             bit.bit === 1 ? handleChange(e.target.value) : handleChange(e, bit);
           }}
@@ -56,8 +61,8 @@ function BitRowTable(props: BitRowProps) {
 }
 
 class BitRowTablePure extends React.PureComponent<BitRowProps> {
-  render() {
-    return <BitRowTable {...this.props} />;
+  render(): JSX.Element {
+    return <BitTableRow {...this.props} />;
   }
 }
 

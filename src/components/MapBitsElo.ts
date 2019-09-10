@@ -4,7 +4,7 @@ export default [
     tipo: 'fixo',
     formato: 'A',
     tamanho: 16,
-    descricao: 'Segundo Mapa de bits'
+    descricao: 'Segundo Mapa de bits',
   },
 
   {
@@ -12,7 +12,7 @@ export default [
     tipo: 'llvar',
     formato: 'N',
     tamanho: 19,
-    descricao: 'Número do Cartão (PAN)'
+    descricao: 'Número do Cartão (PAN)',
   },
 
   {
@@ -20,7 +20,7 @@ export default [
     tipo: 'fixo',
     formato: 'N',
     tamanho: 6,
-    descricao: 'Código de Processamento'
+    descricao: 'Código de Processamento',
   },
 
   {
@@ -28,7 +28,7 @@ export default [
     tipo: 'fixo',
     formato: 'N',
     tamanho: 12,
-    descricao: 'Valor Transação na Moeda Local (Valor Solicitado)'
+    descricao: 'Valor Transação na Moeda Local (Valor Solicitado)',
   },
 
   {
@@ -36,7 +36,7 @@ export default [
     tipo: 'fixo',
     formato: 'N',
     tamanho: 12,
-    descricao: 'Valor Transação na Moeda da Liquidação'
+    descricao: 'Valor Transação na Moeda da Liquidação',
   },
 
   {
@@ -44,7 +44,7 @@ export default [
     tipo: 'fixo',
     formato: 'N',
     tamanho: 10,
-    descricao: 'Data e Hora de Transmissão (MMDDHHMMSS)'
+    descricao: 'Data e Hora de Transmissão (MMDDHHMMSS)',
   },
 
   {
@@ -52,7 +52,7 @@ export default [
     tipo: 'fixo',
     formato: 'N',
     tamanho: 8,
-    descricao: 'Taxa de Conversão da Moeda Local para Moeda de Liquidação'
+    descricao: 'Taxa de Conversão da Moeda Local para Moeda de Liquidação',
   },
 
   {
@@ -60,7 +60,8 @@ export default [
     tipo: 'fixo',
     formato: 'N',
     tamanho: 6,
-    descricao: 'Número de Identificação da Transação da Solução de Captura (STAN)'
+    descricao:
+      'Número de Identificação da Transação da Solução de Captura (STAN)',
   },
 
   {
@@ -68,7 +69,7 @@ export default [
     tipo: 'fixo',
     formato: 'N',
     tamanho: 6,
-    descricao: 'Hora Local da Transação (HHMMSS)'
+    descricao: 'Hora Local da Transação (HHMMSS)',
   },
 
   {
@@ -76,7 +77,7 @@ export default [
     tipo: 'fixo',
     formato: 'N',
     tamanho: 4,
-    descricao: 'Data Local da transação (MMDD)'
+    descricao: 'Data Local da transação (MMDD)',
   },
 
   {
@@ -84,7 +85,7 @@ export default [
     tipo: 'fixo',
     formato: 'N',
     tamanho: 4,
-    descricao: 'Data de Validade de Cartão (AAMM)'
+    descricao: 'Data de Validade de Cartão (AAMM)',
   },
 
   {
@@ -92,7 +93,7 @@ export default [
     tipo: 'fixo',
     formato: 'N',
     tamanho: 4,
-    descricao: 'Data da Liquidação (MMDD)'
+    descricao: 'Data da Liquidação (MMDD)',
   },
 
   {
@@ -100,7 +101,7 @@ export default [
     tipo: 'fixo',
     formato: 'N',
     tamanho: 4,
-    descricao: 'Data de Conversão (MMDD)'
+    descricao: 'Data de Conversão (MMDD)',
   },
 
   {
@@ -108,7 +109,7 @@ export default [
     tipo: 'fixo',
     formato: 'N',
     tamanho: 4,
-    descricao: 'MCC (Merchant Category Code)'
+    descricao: 'MCC (Merchant Category Code)',
   },
 
   {
@@ -116,7 +117,7 @@ export default [
     tipo: 'fixo',
     formato: 'N',
     tamanho: 3,
-    descricao: 'Código do País do Adquirente'
+    descricao: 'Código do País do Adquirente',
   },
 
   {
@@ -124,7 +125,7 @@ export default [
     tipo: 'fixo',
     formato: 'N',
     tamanho: 3,
-    descricao: 'Modo de Entrada do PAN'
+    descricao: 'Modo de Entrada do PAN',
   },
 
   {
@@ -132,7 +133,7 @@ export default [
     tipo: 'fixo',
     formato: 'N',
     tamanho: 3,
-    descricao: 'Número de Sequência do Cartão'
+    descricao: 'Número de Sequência do Cartão',
   },
 
   {
@@ -140,7 +141,7 @@ export default [
     tipo: 'fixo',
     formato: 'N',
     tamanho: 3,
-    descricao: 'Código de Função'
+    descricao: 'Código de Função',
   },
 
   {
@@ -148,7 +149,7 @@ export default [
     tipo: 'fixo',
     formato: 'N',
     tamanho: 2,
-    descricao: 'Código de Motivo da Mensagem'
+    descricao: 'Código de Motivo da Mensagem',
   },
 
   {
@@ -156,7 +157,7 @@ export default [
     tipo: 'fixo',
     formato: 'N',
     tamanho: 2,
-    descricao: 'Código de Captura do PIN no POS'
+    descricao: 'Código de Captura do PIN no POS',
   },
 
   {
@@ -164,7 +165,7 @@ export default [
     tipo: 'fixo',
     formato: 'A',
     tamanho: 9,
-    descricao: 'Valor da taxa da transação'
+    descricao: 'Valor da taxa da transação',
   },
 
   {
@@ -172,7 +173,7 @@ export default [
     tipo: 'llvar',
     formato: 'N',
     tamanho: 11,
-    descricao: 'Código de Identificação da Rede de Captura'
+    descricao: 'Código de Identificação da Rede de Captura',
   },
 
   {
@@ -180,7 +181,7 @@ export default [
     tipo: 'llvar',
     formato: 'N',
     tamanho: 11,
-    descricao: 'Código de Identificação da Instituição de Repasse'
+    descricao: 'Código de Identificação da Instituição de Repasse',
   },
 
   {
@@ -188,7 +189,7 @@ export default [
     tipo: 'llvar',
     formato: 'A',
     tamanho: 37,
-    descricao: 'Trilha 2 do Cartão'
+    descricao: 'Trilha 2 do Cartão',
   },
 
   {
@@ -196,7 +197,7 @@ export default [
     tipo: 'lllvar',
     formato: 'A',
     tamanho: 104,
-    descricao: 'Trilha 3 do Cartão'
+    descricao: 'Trilha 3 do Cartão',
   },
 
   {
@@ -204,7 +205,7 @@ export default [
     tipo: 'fixo',
     formato: 'A',
     tamanho: 12,
-    descricao: 'NSU da Rede de Captura'
+    descricao: 'NSU da Rede de Captura',
   },
 
   {
@@ -212,7 +213,7 @@ export default [
     tipo: 'fixo',
     formato: 'A',
     tamanho: 6,
-    descricao: 'Código de Autorização'
+    descricao: 'Código de Autorização',
   },
 
   {
@@ -220,7 +221,7 @@ export default [
     tipo: 'fixo',
     formato: 'A',
     tamanho: 2,
-    descricao: 'Código de Resposta'
+    descricao: 'Código de Resposta',
   },
 
   {
@@ -228,7 +229,7 @@ export default [
     tipo: 'fixo',
     formato: 'A',
     tamanho: 8,
-    descricao: 'Identificação do Terminal do Estabelecimento Comercial'
+    descricao: 'Identificação do Terminal do Estabelecimento Comercial',
   },
 
   {
@@ -236,7 +237,7 @@ export default [
     tipo: 'fixo',
     formato: 'A',
     tamanho: 15,
-    descricao: 'Código de Identificação do Estabelecimento'
+    descricao: 'Código de Identificação do Estabelecimento',
   },
 
   {
@@ -244,7 +245,7 @@ export default [
     tipo: 'fixo',
     formato: 'A',
     tamanho: 40,
-    descricao: 'Dados do Estabelecimento'
+    descricao: 'Dados do Estabelecimento',
   },
 
   {
@@ -252,7 +253,7 @@ export default [
     tipo: 'llvar',
     formato: 'A',
     tamanho: 76,
-    descricao: 'Trilha 1 do Cartão'
+    descricao: 'Trilha 1 do Cartão',
   },
 
   {
@@ -260,7 +261,7 @@ export default [
     tipo: 'lllvar',
     formato: 'A',
     tamanho: 999,
-    descricao: 'Informações Adicionais de Resposta'
+    descricao: 'Informações Adicionais de Resposta',
   },
 
   {
@@ -268,7 +269,7 @@ export default [
     tipo: 'lllvar',
     formato: 'A',
     tamanho: 999,
-    descricao: 'Informações Adicionais'
+    descricao: 'Informações Adicionais',
   },
 
   {
@@ -276,7 +277,7 @@ export default [
     tipo: 'fixo',
     formato: 'N',
     tamanho: 3,
-    descricao: 'Código da Moeda'
+    descricao: 'Código da Moeda',
   },
 
   {
@@ -284,7 +285,7 @@ export default [
     tipo: 'fixo',
     formato: 'N',
     tamanho: 3,
-    descricao: 'Código da Moeda de Liquidação'
+    descricao: 'Código da Moeda de Liquidação',
   },
 
   {
@@ -292,7 +293,7 @@ export default [
     tipo: 'fixo',
     formato: 'AB',
     tamanho: 16,
-    descricao: 'Dados do PIN'
+    descricao: 'Dados do PIN',
   },
 
   {
@@ -300,7 +301,7 @@ export default [
     tipo: 'fixo',
     formato: 'A',
     tamanho: 16,
-    descricao: 'Informação de Controle Relacionada à Segurança'
+    descricao: 'Informação de Controle Relacionada à Segurança',
   },
 
   {
@@ -308,7 +309,7 @@ export default [
     tipo: 'lllvar',
     formato: 'A',
     tamanho: 120,
-    descricao: 'Valores Adicionais'
+    descricao: 'Valores Adicionais',
   },
 
   {
@@ -316,7 +317,7 @@ export default [
     tipo: 'lllvar',
     formato: 'B',
     tamanho: 999,
-    descricao: 'Codificação das Informações EMV'
+    descricao: 'Codificação das Informações EMV',
   },
 
   {
@@ -324,7 +325,7 @@ export default [
     tipo: 'lllvar',
     formato: 'A',
     tamanho: 999,
-    descricao: 'Dados geográficos'
+    descricao: 'Dados geográficos',
   },
 
   {
@@ -332,7 +333,7 @@ export default [
     tipo: 'lllvar',
     formato: 'A',
     tamanho: 13,
-    descricao: 'Dados Adicionais de Terminal'
+    descricao: 'Dados Adicionais de Terminal',
   },
 
   {
@@ -340,7 +341,7 @@ export default [
     tipo: 'lllvar',
     formato: 'A',
     tamanho: 999,
-    descricao: 'Dados para Identificar Transações Online'
+    descricao: 'Dados para Identificar Transações Online',
   },
 
   {
@@ -348,7 +349,7 @@ export default [
     tipo: 'lllvar',
     formato: 'A',
     tamanho: 547,
-    descricao: 'Serviço de Verificação de Endereço (AVS)'
+    descricao: 'Serviço de Verificação de Endereço (AVS)',
   },
 
   {
@@ -356,7 +357,7 @@ export default [
     tipo: 'fixo',
     formato: 'N',
     tamanho: 42,
-    descricao: 'Dados para Identificar Transação Original'
+    descricao: 'Dados para Identificar Transação Original',
   },
 
   {
@@ -364,7 +365,7 @@ export default [
     tipo: 'lllvar',
     formato: 'B',
     tamanho: 999,
-    descricao: 'Dados Transacionais'
+    descricao: 'Dados Transacionais',
   },
 
   {
@@ -372,7 +373,7 @@ export default [
     tipo: 'lllvar',
     formato: 'A',
     tamanho: 5,
-    descricao: 'Identificador do Cartão (CVE2)'
+    descricao: 'Identificador do Cartão (CVE2)',
   },
 
   {
@@ -380,6 +381,6 @@ export default [
     tipo: 'lllvar',
     formato: 'A',
     tamanho: 5,
-    descricao: 'Indicador de Versão'
-  }
+    descricao: 'Indicador de Versão',
+  },
 ];

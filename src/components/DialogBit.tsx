@@ -10,49 +10,64 @@ import {
   Checkbox,
   DialogContent,
   DialogActions,
-  Button
+  Button,
 } from '@material-ui/core';
 
-import MapBit from './interfaces/MapBit';
+import MapBit from './interfaces/Interfaces';
 import { gerarMapaDeBits } from './FuncoesComuns';
+import { State as StateDefault } from '../pages/Elo';
 
 export interface DialogBitProps {
   open: boolean;
-  bits: MapBit[];
-  setBits: CallableFunction;
-  onClose: CallableFunction;
-  handleChange1Mapa: CallableFunction;
-  handleChange2Mapa: CallableFunction;
+  stateDefault: StateDefault;
+  onClose: () => void;
+  handleChange1Mapa: (value: string) => void;
+  handleChange2Mapa: (value: string) => void;
 }
 
-const DialogBit = (props: DialogBitProps) => {
-  const { open, bits, onClose, handleChange1Mapa, handleChange2Mapa } = props;
+const DialogBit = (props: DialogBitProps): JSX.Element => {
+  const { open, onClose, handleChange1Mapa, handleChange2Mapa } = props;
 
-  const handleToggle = (value: MapBit) => () => {
-    const currentIndex = bits.indexOf(value);
+  const handleToggle = (value: MapBit): void => {
+    const currentIndex = props.stateDefault.bits.indexOf(value);
 
-    let newBits = [...bits];
+    const newBits = [...props.stateDefault.bits];
 
-    newBits[currentIndex] = { ...newBits[currentIndex], checked: !newBits[currentIndex].checked };
-    
+    newBits[currentIndex] = {
+      ...newBits[currentIndex],
+      checked: !newBits[currentIndex].checked,
+    };
+
     const hexa = gerarMapaDeBits(newBits);
-    
+
     if (value.bit < 65) {
       handleChange1Mapa(hexa.slice(0, 16));
     } else {
-      handleChange2Mapa(hexa.slice(16,));
+      handleChange2Mapa(hexa.slice(16));
     }
   };
 
   return (
-    <Dialog onClose={() => onClose()} aria-labelledby="simple-dialog-title" open={open}>
+    <Dialog
+      onClose={(): void => onClose()}
+      aria-labelledby="simple-dialog-title"
+      open={open}
+    >
       <DialogTitle>Selecione os Bits</DialogTitle>
       <DialogContent>
         <List>
-          {bits.map((bit: MapBit) => (
-            <ListItem button onClick={handleToggle(bit)} key={bit.bit}>
+          {props.stateDefault.bits.map((bit: MapBit) => (
+            <ListItem
+              button={true}
+              onClick={(): void => handleToggle(bit)}
+              key={bit.bit}
+            >
               <ListItemIcon>
-                <Checkbox edge="start" checked={bit.checked} disableRipple />
+                <Checkbox
+                  edge="start"
+                  checked={bit.checked}
+                  disableRipple={true}
+                />
               </ListItemIcon>
               <ListItemText primary={bit.bit + ' - ' + bit.descricao} />
             </ListItem>
@@ -60,7 +75,7 @@ const DialogBit = (props: DialogBitProps) => {
         </List>
       </DialogContent>
       <DialogActions>
-        <Button onClick={() => onClose()} color="primary">
+        <Button onClick={(): void => onClose()} color="primary">
           Fechar
         </Button>
       </DialogActions>

@@ -4,7 +4,7 @@ export default [
     tipo: 'fixo',
     formato: 'B',
     tamanho: 8,
-    descricao: 'Segundo Mapa de bits'
+    descricao: 'Segundo Mapa de bits',
   },
 
   {
@@ -12,7 +12,7 @@ export default [
     tipo: 'llvar',
     formato: 'P',
     tamanho: 19,
-    descricao: 'Primary Account Number (PAN)'
+    descricao: 'Primary Account Number (PAN)',
   },
 
   {
@@ -20,7 +20,7 @@ export default [
     tipo: 'fixo',
     formato: 'P',
     tamanho: 6,
-    descricao: 'Processing Code'
+    descricao: 'Processing Code',
   },
 
   {
@@ -28,7 +28,7 @@ export default [
     tipo: 'fixo',
     formato: 'P',
     tamanho: 12,
-    descricao: 'Transaction Amount'
+    descricao: 'Transaction Amount',
   },
 
   {
@@ -36,7 +36,7 @@ export default [
     tipo: 'fixo',
     formato: 'P',
     tamanho: 12,
-    descricao: 'Settlement Amount'
+    descricao: 'Settlement Amount',
   },
 
   {
@@ -44,7 +44,7 @@ export default [
     tipo: 'fixo',
     formato: 'P',
     tamanho: 12,
-    descricao: 'Cardholder Billing Amount'
+    descricao: 'Cardholder Billing Amount',
   },
 
   {
@@ -52,7 +52,7 @@ export default [
     tipo: 'fixo',
     formato: 'P',
     tamanho: 10,
-    descricao: 'Transmission Date and Time (MMDDHHMMSS)'
+    descricao: 'Transmission Date and Time (MMDDHHMMSS)',
   },
 
   {
@@ -60,7 +60,7 @@ export default [
     tipo: 'fixo',
     formato: 'P',
     tamanho: 8,
-    descricao: 'Conversion Rate, Cardholder Billing'
+    descricao: 'Conversion Rate, Cardholder Billing',
   },
 
   {
@@ -68,7 +68,7 @@ export default [
     tipo: 'fixo',
     formato: 'P',
     tamanho: 6,
-    descricao: 'System Trace Audit Number'
+    descricao: 'System Trace Audit Number',
   },
 
   {
@@ -76,7 +76,7 @@ export default [
     tipo: 'fixo',
     formato: 'P',
     tamanho: 6,
-    descricao: 'Time, Local Transaction (HHMMSS)'
+    descricao: 'Time, Local Transaction (HHMMSS)',
   },
 
   {
@@ -84,7 +84,7 @@ export default [
     tipo: 'fixo',
     formato: 'P',
     tamanho: 4,
-    descricao: 'Date, Local Transaction (MMDD)'
+    descricao: 'Date, Local Transaction (MMDD)',
   },
 
   {
@@ -92,7 +92,7 @@ export default [
     tipo: 'fixo',
     formato: 'P',
     tamanho: 4,
-    descricao: 'Date, Expiration (AAMM)'
+    descricao: 'Date, Expiration (AAMM)',
   },
 
   {
@@ -100,7 +100,7 @@ export default [
     tipo: 'fixo',
     formato: 'P',
     tamanho: 4,
-    descricao: 'Merchant Type'
+    descricao: 'Merchant Type',
   },
 
   {
@@ -108,7 +108,7 @@ export default [
     tipo: 'fixo',
     formato: 'P',
     tamanho: 3,
-    descricao: 'Acquiring Institution Country Code'
+    descricao: 'Acquiring Institution Country Code',
   },
 
   {
@@ -116,7 +116,7 @@ export default [
     tipo: 'fixo',
     formato: 'P',
     tamanho: 4,
-    descricao: 'Point-of-Service Entry Mode Code  '
+    descricao: 'Point-of-Service Entry Mode Code  ',
   },
 
   {
@@ -124,7 +124,7 @@ export default [
     tipo: 'fixo',
     formato: 'P',
     tamanho: 3,
-    descricao: 'Card Sequence Number  '
+    descricao: 'Card Sequence Number  ',
   },
 
   {
@@ -132,7 +132,7 @@ export default [
     tipo: 'fixo',
     formato: 'P',
     tamanho: 2,
-    descricao: 'Point-of-Service Condition Code'
+    descricao: 'Point-of-Service Condition Code',
   },
 
   {
@@ -140,7 +140,7 @@ export default [
     tipo: 'fixo',
     formato: 'P',
     tamanho: 2,
-    descricao: 'Point-of-Service PIN Capture Code'
+    descricao: 'Point-of-Service PIN Capture Code',
   },
 
   {
@@ -148,7 +148,7 @@ export default [
     tipo: 'llvar',
     formato: 'P',
     tamanho: 11,
-    descricao: 'Acquiring Institution Identification Code'
+    descricao: 'Acquiring Institution Identification Code',
   },
 
   {
@@ -156,7 +156,7 @@ export default [
     tipo: 'llvar',
     formato: 'P',
     tamanho: 37,
-    descricao: 'Track 2 Data'
+    descricao: 'Track 2 Data',
   },
 
   {
@@ -164,7 +164,7 @@ export default [
     tipo: 'lllvar',
     formato: 'A',
     tamanho: 16,
-    descricao: 'P.I.N. DATA'
+    descricao: 'P.I.N. DATA',
   },
 
   {
@@ -172,7 +172,7 @@ export default [
     tipo: 'fixo',
     formato: 'A',
     tamanho: 12,
-    descricao: 'Retrieval Reference Number'
+    descricao: 'Retrieval Reference Number',
   },
 
   {
@@ -180,7 +180,7 @@ export default [
     tipo: 'fixo',
     formato: 'A',
     tamanho: 6,
-    descricao: 'Authorization Identification Response'
+    descricao: 'Authorization Identification Response',
   },
 
   {
@@ -188,7 +188,7 @@ export default [
     tipo: 'fixo',
     formato: 'A',
     tamanho: 2,
-    descricao: 'Response Code'
+    descricao: 'Response Code',
   },
 
   {
@@ -196,7 +196,7 @@ export default [
     tipo: 'fixo',
     formato: 'A',
     tamanho: 8,
-    descricao: 'Card Acceptor Terminal Identification'
+    descricao: 'Card Acceptor Terminal Identification',
   },
 
   {
@@ -204,7 +204,7 @@ export default [
     tipo: 'fixo',
     formato: 'A',
     tamanho: 15,
-    descricao: 'Card Acceptor Identification Code'
+    descricao: 'Card Acceptor Identification Code',
   },
 
   {
@@ -212,7 +212,7 @@ export default [
     tipo: 'fixo',
     formato: 'A',
     tamanho: 40,
-    descricao: 'Card Acceptor Name/Location'
+    descricao: 'Card Acceptor Name/Location',
   },
 
   {
@@ -220,7 +220,7 @@ export default [
     tipo: 'llvar',
     formato: 'A',
     tamanho: 25,
-    descricao: 'Additional Response Data'
+    descricao: 'Additional Response Data',
   },
 
   {
@@ -228,7 +228,7 @@ export default [
     tipo: 'llvar',
     formato: 'A',
     tamanho: 76,
-    descricao: 'Track 1 Data'
+    descricao: 'Track 1 Data',
   },
 
   {
@@ -236,7 +236,7 @@ export default [
     tipo: 'lllvar',
     formato: 'A',
     tamanho: 255,
-    descricao: 'Additional Data—Private'
+    descricao: 'Additional Data—Private',
   },
 
   {
@@ -244,7 +244,7 @@ export default [
     tipo: 'fixo',
     formato: 'P',
     tamanho: 3,
-    descricao: 'Currency Code, Transaction'
+    descricao: 'Currency Code, Transaction',
   },
 
   {
@@ -252,7 +252,7 @@ export default [
     tipo: 'fixo',
     formato: 'P',
     tamanho: 3,
-    descricao: 'Currency Code, Cardholder Billing'
+    descricao: 'Currency Code, Cardholder Billing',
   },
 
   {
@@ -260,7 +260,7 @@ export default [
     tipo: 'fixo',
     formato: 'B',
     tamanho: 8,
-    descricao: 'Personal Identification Number (PIN) Data'
+    descricao: 'Personal Identification Number (PIN) Data',
   },
 
   {
@@ -268,7 +268,7 @@ export default [
     tipo: 'fixo',
     formato: 'P',
     tamanho: 16,
-    descricao: 'Security-Related Control Information'
+    descricao: 'Security-Related Control Information',
   },
 
   {
@@ -276,7 +276,7 @@ export default [
     tipo: 'lllvar',
     formato: 'B',
     tamanho: 255,
-    descricao: 'Integrated Circuit Card (ICC)-Related Data'
+    descricao: 'Integrated Circuit Card (ICC)-Related Data',
   },
 
   {
@@ -284,7 +284,7 @@ export default [
     tipo: 'llvar',
     formato: 'A',
     tamanho: 14,
-    descricao: 'National Point-of-Service Geographic Data'
+    descricao: 'National Point-of-Service Geographic Data',
   },
 
   {
@@ -292,7 +292,7 @@ export default [
     tipo: 'lllvar',
     formato: 'B',
     tamanho: 12,
-    descricao: 'Additional POS Information'
+    descricao: 'Additional POS Information',
   },
 
   {
@@ -300,7 +300,7 @@ export default [
     tipo: 'lllvar',
     formato: 'P',
     tamanho: 19,
-    descricao: 'Other Amounts'
+    descricao: 'Other Amounts',
   },
 
   {
@@ -308,7 +308,7 @@ export default [
     tipo: 'lllvar',
     formato: 'B',
     tamanho: 255,
-    descricao: 'Custom Payment Service Fields (Bitmap Format)'
+    descricao: 'Custom Payment Service Fields (Bitmap Format)',
   },
 
   {
@@ -316,7 +316,7 @@ export default [
     tipo: 'lllvar',
     formato: 'B',
     tamanho: 255,
-    descricao: 'V.I.P. Private-Use Field'
+    descricao: 'V.I.P. Private-Use Field',
   },
 
   {
@@ -324,7 +324,7 @@ export default [
     tipo: 'fixo',
     formato: 'P',
     tamanho: 42,
-    descricao: 'Original Data Elements'
+    descricao: 'Original Data Elements',
   },
 
   {
@@ -332,7 +332,7 @@ export default [
     tipo: 'lllvar',
     formato: 'B',
     tamanho: 255,
-    descricao: 'Transaction Description & Transaction-Specific Data'
+    descricao: 'Transaction Description & Transaction-Specific Data',
   },
 
   {
@@ -340,7 +340,7 @@ export default [
     tipo: 'lllvar',
     formato: 'B',
     tamanho: 255,
-    descricao: 'Verification Data'
+    descricao: 'Verification Data',
   },
 
   {
@@ -348,6 +348,6 @@ export default [
     tipo: 'lllvar',
     formato: 'B',
     tamanho: 255,
-    descricao: 'Visa Private-Use Fields'
-  }
+    descricao: 'Visa Private-Use Fields',
+  },
 ];

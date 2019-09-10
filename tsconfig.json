@@ -3,10 +3,7 @@
     "outDir": "build/dist",
     "module": "esnext",
     "target": "es5",
-    "lib": [
-      "es6",
-      "dom"
-    ],
+    "lib": ["es6", "dom"],
     "sourceMap": true,
     "allowJs": true,
     "jsx": "preserve",
@@ -23,7 +20,8 @@
     "forceConsistentCasingInFileNames": true,
     "resolveJsonModule": true,
     "isolatedModules": true,
-    "noEmit": true
+    "noEmit": true,
+    "plugins": [{ "name": "typescript-tslint-plugin" }]
   },
   "exclude": [
     "node_modules",
@@ -34,10 +32,6 @@
     "jest",
     "src/setupTests.ts"
   ],
-  "types": [
-    "typePatches"
-  ],
-  "include": [
-    "src"
-  ]
+  "types": ["typePatches"],
+  "include": ["src"]
 }

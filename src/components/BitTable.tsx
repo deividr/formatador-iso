@@ -10,34 +10,32 @@ import {
   TableBody,
   TextField,
   InputAdornment,
-  IconButton
+  IconButton,
 } from '@material-ui/core';
 
-import Menu from '@material-ui/icons/Menu';
+import { setCheckedBits } from '../components/FuncoesComuns';
 
-import BitRowTable from './BitRowTable';
-import MapBit from './interfaces/MapBit';
+import Menu from '@material-ui/icons/Menu';
+import BitRowTable from './BitTableRow';
+import MapBit from './interfaces/Interfaces';
 import DialogBit from './DialogBit';
+
+import { State as StateDefault } from '../pages/Elo';
 
 const StyledTableCell = withStyles((theme: Theme) =>
   createStyles({
     head: {
       backgroundColor: '#ab003c',
       color: theme.palette.common.white,
-      fontSize: 16
-    }
+      fontSize: 16,
+    },
   })
 )(TableCell);
 
 interface BitTableProps {
   bandeira: string;
-  bits: MapBit[];
-  setBits: CallableFunction;
-  codigoMensagem: { content: string; error: boolean };
-  setCodigoMensagem: CallableFunction;
-  primeiroMapaBits: { content: string; error: boolean };
-  setPrimeiroMapaBits: CallableFunction;
-  setCheckedBits: CallableFunction;
+  stateDefault: StateDefault;
+  setStateDefault: (stateDefault: StateDefault) => void;
 }
 
 class BitTable extends React.PureComponent<BitTableProps, { open: boolean }> {
@@ -51,81 +49,102 @@ class BitTable extends React.PureComponent<BitTableProps, { open: boolean }> {
     this.pattNumber = new RegExp('[^0-9]');
   }
 
-  handleChangeCodigo = (value: string) => {
-    if (this.pattNumber.test(value)) return;
+  handleChangeCodigo = (value: string): void => {
+    if (this.pattNumber.test(value)) {
+      return;
+    }
 
     const error = value.length < 4;
 
-    this.props.setCodigoMensagem({ content: value, error: error });
+    this.props.setStateDefault({
+      ...this.props.stateDefault,
+      codigoMensagem: { content: value, error },
+    });
   };
 
-  handleChange1Mapa = (value: string) => {
+  handleChange1Mapa = (value: string): void => {
     value = value.toUpperCase();
 
-    if (this.pattHexa.test(value)) return;
+    if (this.pattHexa.test(value)) {
+      return;
+    }
 
     const error = value.length < 16;
 
-    this.props.setPrimeiroMapaBits({ content: value, error: error });
+    let newBits = [...this.props.stateDefault.bits];
 
-    if (!error) this.props.setCheckedBits(value, this.props.bits);
+    if (!error) {
+      newBits = setCheckedBits(value, newBits);
+    }
+
+    this.props.setStateDefault({
+      ...this.props.stateDefault,
+      primeiroMapaBits: { content: value, error },
+      bits: newBits,
+    });
   };
 
-  handleChange2Mapa = (value: string) => {
-    value = value.toUpperCase();
+  handleChange2Mapa = (content: string): void => {
+    content = content.toUpperCase();
 
-    if (this.pattHexa.test(value)) return;
+    if (this.pattHexa.test(content)) {
+      return;
+    }
 
-    let error = value.length < 16 || value === '0000000000000000';
+    const error = content.length < 16 || content === '0000000000000000';
 
-    const newBits = [...this.props.bits];
+    let bits = [...this.props.stateDefault.bits];
 
-    newBits[0] = { ...newBits[0], content: value, error: error };
+    bits[0] = { ...bits[0], content, error };
 
     /**
      * Se o primeiro e segundo mapa de bits estão ok, então reformata a lista de bits.
      */
-    if (!error && !this.props.primeiroMapaBits.error) {
-      this.props.setCheckedBits(this.props.primeiroMapaBits.content, newBits);
-      return;
+    if (!error && !this.props.stateDefault.primeiroMapaBits.error) {
+      bits = setCheckedBits(
+        this.props.stateDefault.primeiroMapaBits.content,
+        bits
+      );
     }
 
-    this.props.setBits(newBits);
+    this.props.setStateDefault({ ...this.props.stateDefault, bits });
   };
 
-  handleChange = (e: ChangeEvent<any>, bit: MapBit) => {
-    let { value, name, maxLength } = e.target;
+  handleChange = (e: ChangeEvent<any>, bit: MapBit): void => {
+    const { value, name, maxLength } = e.target;
 
     /**
      * Se o tamanho for fixo e o conteúdo digitado for menor, ou,
      * o tamanho não é fixo porém o campo não está preenchido então
      * flaga o bit com erro.
      */
-    let error =
+    const error =
       (bit.tipo === 'fixo' && value.length < maxLength) ||
       (bit.tipo !== 'fixo' && value.length === 0);
 
-    const newBits = this.props.bits.map(bitAtual => {
-      if (bitAtual.bit === bit.bit) {
-        return { ...bit, [name]: value, error: error };
-      } else {
-        return bitAtual;
+    const bits = this.props.stateDefault.bits.map<MapBit>(
+      (bitAtual: MapBit) => {
+        if (bitAtual.bit === bit.bit) {
+          return { ...bit, [name]: value, error };
+        } else {
+          return bitAtual;
+        }
       }
-    });
+    );
 
-    this.props.setBits(newBits);
+    this.props.setStateDefault({ ...this.props.stateDefault, bits });
   };
 
-  handleClickOpen = () => {
+  handleClickOpen = (): void => {
     this.setState({ open: true });
   };
 
-  handleClose = () => {
+  handleClose = (): void => {
     this.setState({ open: false });
   };
 
-  render() {
-    const { bits, setBits, codigoMensagem, primeiroMapaBits } = this.props;
+  render(): JSX.Element {
+    const { bits, codigoMensagem, primeiroMapaBits } = this.props.stateDefault;
 
     return (
       <React.Fragment>
@@ -134,7 +153,9 @@ class BitTable extends React.PureComponent<BitTableProps, { open: boolean }> {
             <TableHead>
               <TableRow>
                 <StyledTableCell style={{ width: 10 }}>Bit</StyledTableCell>
-                <StyledTableCell style={{ width: 300 }}>Descrição</StyledTableCell>
+                <StyledTableCell style={{ width: 300 }}>
+                  Descrição
+                </StyledTableCell>
                 <StyledTableCell style={{ width: 70 }}>Tamanho</StyledTableCell>
                 <StyledTableCell>Conteúdo</StyledTableCell>
               </TableRow>
@@ -149,11 +170,13 @@ class BitTable extends React.PureComponent<BitTableProps, { open: boolean }> {
                   <TextField
                     variant="outlined"
                     margin="dense"
-                    fullWidth
+                    fullWidth={true}
                     inputProps={{ maxLength: 4 }}
                     error={codigoMensagem.error}
                     value={codigoMensagem.content}
-                    onChange={e => this.handleChangeCodigo(e.target.value)}
+                    onChange={(e: ChangeEvent<HTMLInputElement>): void =>
+                      this.handleChangeCodigo(e.target.value)
+                    }
                   />
                 </TableCell>
               </TableRow>
@@ -165,35 +188,40 @@ class BitTable extends React.PureComponent<BitTableProps, { open: boolean }> {
                   <TextField
                     variant="outlined"
                     margin="dense"
-                    fullWidth
+                    fullWidth={true}
                     error={primeiroMapaBits.error}
                     value={primeiroMapaBits.content}
-                    onChange={e => this.handleChange1Mapa(e.target.value)}
+                    onChange={(e: ChangeEvent<HTMLInputElement>): void =>
+                      this.handleChange1Mapa(e.target.value)
+                    }
                     inputProps={{ maxLength: 16 }}
-                    //eslint-disable-next-line
+                    // eslint-disable-next-line
                     InputProps={{
                       endAdornment: (
                         <InputAdornment position="end">
                           <IconButton
                             edge="end"
                             aria-label="toggle password visibility"
-                            onClick={this.handleClickOpen}>
+                            onClick={this.handleClickOpen}
+                          >
                             <Menu color="secondary" />
                           </IconButton>
                         </InputAdornment>
-                      )
+                      ),
                     }}
                   />
                 </TableCell>
               </TableRow>
               {bits
-                .filter(bit => bit.checked)
+                .filter((bit: MapBit) => bit.checked)
                 .map((bit: MapBit, index: number) => (
                   <BitRowTable
                     key={bit.bit}
                     index={index}
                     bit={bit}
-                    handleChange={bit.bit === 1 ? this.handleChange2Mapa : this.handleChange}
+                    handleChange={
+                      bit.bit === 1 ? this.handleChange2Mapa : this.handleChange
+                    }
                   />
                 ))}
             </TableBody>
@@ -201,8 +229,7 @@ class BitTable extends React.PureComponent<BitTableProps, { open: boolean }> {
         </Box>
         <DialogBit
           open={this.state.open}
-          bits={bits}
-          setBits={setBits}
+          stateDefault={this.props.stateDefault}
           onClose={this.handleClose}
           handleChange1Mapa={this.handleChange1Mapa}
           handleChange2Mapa={this.handleChange2Mapa}

@@ -8,3 +8,13 @@ export default interface MapBit {
   checked: boolean;
   error: boolean;
 }
+
+export interface Mensagem {
+  variant: 'error' | 'success' | 'warning' | 'info';
+  mensagem: string;
+}
+
+export interface FieldDefault {
+  content: string;
+  error: boolean;
+}

@@ -8,7 +8,7 @@ import teal from '@material-ui/core/colors/teal';
 import Header from '../components/Header';
 import Cabecalho from '../components/Cabecalho';
 import BitTable from '../components/BitTable';
-import MapBit from '../components/interfaces/MapBit';
+import MapBit from '../components/interfaces/Interfaces';
 import mapBitVisa from '../components/MapBitsVisa';
 import Message from '../components/Message';
 import { Snackbar } from '@material-ui/core';
@@ -214,10 +214,13 @@ export default () => {
       }
     });
 */
-  return (
+  return (<div></div>);
+  /*
+  (
     <div className="visa-container">
       <ThemeProvider theme={theme}>
         <Header bandeira="visa" />
+        
         <Cabecalho
           handlerDesmembrar={() => null}
           handlerGerarInput={() => null}
@@ -274,4 +277,5 @@ export default () => {
       </ThemeProvider>
     </div>
   );
+  */
 };

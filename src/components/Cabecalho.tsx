@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { ChangeEvent } from 'react';
 import {
   Box,
   Grid,
@@ -6,19 +6,23 @@ import {
   FormControlLabel,
   Checkbox,
   Button,
-  Tooltip
+  Tooltip,
 } from '@material-ui/core';
+
 import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
+import MapBit from './interfaces/Interfaces';
+
+import { State as StateDefault } from '../pages/Elo';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     button: {
       marginRight: theme.spacing(1),
-      marginTop: theme.spacing(2)
+      marginTop: theme.spacing(2),
     },
     textField: {
-      fontFamily: 'Fira Code, Consolas, monospace'
-    }
+      fontFamily: 'Fira Code, Consolas, monospace',
+    },
   })
 );
 
@@ -28,60 +32,70 @@ interface CabecalhoProps {
   handlerAtualizarInput: () => void;
   handlerAnularInput: () => void;
   handlerSetViaYMRB: (checked: boolean) => void;
-  colunas: number;
-  viaYMRB?: boolean;
-  setColunas: (colunas: number) => void;
-  msgIso: string;
-  setMsgIso: (mensagem: string) => void;
-  bitsError: boolean;
+  stateDefault: StateDefault;
+  setStateDefault: (stateDefault: StateDefault) => void;
 }
 
-const Cabecalho = (props: CabecalhoProps) => {
-  const classes = useStyles();
+const Cabecalho = (props: CabecalhoProps): JSX.Element => {
+  const classes = useStyles(props);
+
   const {
     handlerDesmembrar,
     handlerGerarInput,
     handlerAtualizarInput,
     handlerAnularInput,
     handlerSetViaYMRB,
-    msgIso,
-    setMsgIso,
-    colunas,
-    viaYMRB,
-    setColunas,
-    bitsError
+    stateDefault,
+    setStateDefault,
   } = props;
+
+  const bitsError =
+    stateDefault.codigoMensagem.error ||
+    stateDefault.primeiroMapaBits.error ||
+    stateDefault.bits.some((bit: MapBit) => bit.checked && bit.error);
 
   return (
     <Box boxShadow={1} marginTop={2} padding={2}>
-      <Grid container spacing={1}>
-        <Grid item xs={11}>
+      <Grid container={true} spacing={1}>
+        <Grid item={true} xs={11}>
           <TextField
             id="inputIso"
             variant="outlined"
-            multiline
+            multiline={true}
             label="String ISO"
             rows="20"
-            fullWidth
-            onChange={e => setMsgIso(e.target.value)}
-            value={msgIso}
+            fullWidth={true}
+            onChange={(e: ChangeEvent<HTMLInputElement>): void =>
+              setStateDefault({ ...stateDefault, msgIso: e.target.value })
+            }
+            value={stateDefault.msgIso}
             InputProps={{ className: classes.textField }}
           />
         </Grid>
-        <Grid item xs={1}>
+        <Grid item={true} xs={1}>
           <TextField
             type="number"
             variant="outlined"
             label="Colunas"
-            fullWidth
-            value={colunas}
-            onChange={e => setColunas(parseInt(e.target.value))}
+            fullWidth={true}
+            value={stateDefault.colunas}
+            onChange={(e: ChangeEvent<HTMLInputElement>): void =>
+              setStateDefault({
+                ...stateDefault,
+                colunas: parseInt(e.target.value, 10),
+              })
+            }
           />
-          {viaYMRB !== undefined && (
+          {stateDefault.viaYMRB !== undefined && (
             <Tooltip title="Indica que string é entrada do YMRB, por tanto o bit 52 tem tamanho de 8">
               <FormControlLabel
                 control={
-                  <Checkbox value={viaYMRB} onChange={e => handlerSetViaYMRB(e.target.checked)} />
+                  <Checkbox
+                    value={stateDefault.viaYMRB}
+                    onChange={(e: ChangeEvent<HTMLInputElement>): void =>
+                      handlerSetViaYMRB(e.target.checked)
+                    }
+                  />
                 }
                 label="YMRB"
               />
@@ -93,8 +107,9 @@ const Cabecalho = (props: CabecalhoProps) => {
         variant="contained"
         color="primary"
         className={classes.button}
-        disabled={msgIso.length === 0}
-        onClick={handlerDesmembrar}>
+        disabled={stateDefault.msgIso.length === 0}
+        onClick={handlerDesmembrar}
+      >
         Desmembrar
       </Button>
       <Button
@@ -102,23 +117,26 @@ const Cabecalho = (props: CabecalhoProps) => {
         color="primary"
         className={classes.button}
         disabled={bitsError}
-        onClick={handlerGerarInput}>
+        onClick={handlerGerarInput}
+      >
         Gerar Input
       </Button>
       <Button
         variant="contained"
         color="primary"
         className={classes.button}
-        disabled={bitsError}
-        onClick={handlerAtualizarInput}>
+        disabled={bitsError || stateDefault.codigoMensagem.content === '0400'}
+        onClick={handlerAtualizarInput}
+      >
         Atualizar Input
       </Button>
       <Button
         variant="contained"
         color="secondary"
         className={classes.button}
-        disabled={bitsError}
-        onClick={handlerAnularInput}>
+        disabled={bitsError || stateDefault.codigoMensagem.content === '0400'}
+        onClick={handlerAnularInput}
+      >
         Gerar Anulação
       </Button>
     </Box>
@@ -126,7 +144,7 @@ const Cabecalho = (props: CabecalhoProps) => {
 };
 
 class CabecalhoPure extends React.PureComponent<CabecalhoProps> {
-  render() {
+  render(): JSX.Element {
     return <Cabecalho {...this.props} />;
   }
 }

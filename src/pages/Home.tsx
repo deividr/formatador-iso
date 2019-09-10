@@ -8,7 +8,7 @@ import Container from '@material-ui/core/Container';
 import LogoVisa from '../assets/visa.png';
 import LogoElo from '../assets/elo.png';
 
-export default () => {
+export default (): JSX.Element => {
   return (
     <Container maxWidth="sm">
       <Typography align="center" variant="h6" color="inherit">

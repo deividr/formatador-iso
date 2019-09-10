@@ -2,29 +2,26 @@ import React, { useState } from 'react';
 import Header from '../components/Header';
 import Cabecalho from '../components/Cabecalho';
 import BitTable from '../components/BitTable';
-import MapBit from '../components/interfaces/MapBit';
 import mapBitElo from '../components/MapBitsElo';
 import Message from '../components/Message';
 import { Snackbar } from '@material-ui/core';
 import { gerarMapaDeBits, hexa2Binario } from '../components/FuncoesComuns';
 
-export interface Mensagem {
-  variant: 'error' | 'success' | 'warning' | 'info';
-  mensagem: string;
-}
+import MapBit, {
+  Mensagem,
+  FieldDefault,
+} from '../components/interfaces/Interfaces';
 
-export interface FieldDefault {
-  content: string;
-  error: boolean;
-}
-
-export interface StateDefault {
-  open: boolean;
+export type State = {
   msgIso: string;
-  bits: MapBit[];  
-}
+  bits: MapBit[];
+  codigoMensagem: FieldDefault;
+  primeiroMapaBits: FieldDefault;
+  colunas: number;
+  viaYMRB: boolean;
+};
 
-export default () => {
+export default (): JSX.Element => {
   const patt = new RegExp('[^0-9]');
 
   const initialList = mapBitElo.map<MapBit>((bit: any) => {
@@ -35,139 +32,153 @@ export default () => {
   });
 
   const queueRef = React.useRef<Mensagem[]>([]);
-  const [open, setOpen] = useState<boolean>(false);
-  const [msgIso, setMsgIso] = useState<string>('');
-  const [bits, setBits] = useState<MapBit[]>(initialList);
-  const [codigoMensagem, setCodigoMensagem] = useState<FieldDefault>({ content: '', error: true });
-  const [primeiroMapaBits, setPrimeiroMapaBits] = useState<FieldDefault>({
-    content: '',
-    error: true
+
+  const [state, setState] = useState<State>({
+    msgIso: '',
+    bits: initialList,
+    codigoMensagem: { content: '', error: true },
+    primeiroMapaBits: { content: '', error: true },
+    colunas: 32,
+    viaYMRB: false,
   });
-  const [colunas, setColunas] = useState<number>(32);
-  const [viaYMRB, setViaYMRB] = useState<boolean>(false);
-  const [bitsError, setBitsError] = useState<boolean>(true);
+
+  const [open, setOpen] = useState<boolean>(false);
 
   const [mensagem, setMensagem] = useState<Mensagem | undefined>({
     variant: 'error',
-    mensagem: ''
+    mensagem: '',
   });
 
-  const processQueue = () => {
+  const processQueue = (): void => {
     if (queueRef.current.length > 0) {
       setMensagem(queueRef.current.shift());
       setOpen(true);
     }
   };
 
-  const showMensagem = (newMsg: Mensagem) => {
+  const showMensagem = (newMsg: Mensagem): void => {
     queueRef.current.push(newMsg);
 
     if (open) {
       // immediately begin dismissing current message
       // to start showing new one
-      setOpen(false);
+      handleClose();
     } else {
       processQueue();
     }
   };
 
-  const handleClose = () => {
+  const handleClose = (): void => {
     setOpen(false);
   };
 
-  const handleExited = () => {
+  const handleExited = (): void => {
     processQueue();
   };
 
-  const handlerSetBits = (newBits: MapBit[]) => {
-    setBits(newBits);
-    setBitsError(newBits.some(bit => bit.checked && bit.error));
-  };
+  const handlerSetViaYMRB = (checked: boolean): void => {
+    const tamanho = checked ? 4 : 16;
 
-  const handlerSetViaYMRB = (checked: boolean) => {
-    setViaYMRB(checked);
-
-    const tam = checked ? 4 : 16;
-
-    setBits(
-      bits.map(bit => {
-        if (bit.bit === 52) return { ...bit, tamanho: tam };
+    setState({
+      ...state,
+      viaYMRB: checked,
+      bits: state.bits.map((bit: MapBit) => {
+        if (bit.bit === 52) {
+          return { ...bit, tamanho };
+        }
         return bit;
-      })
-    );
+      }),
+    });
   };
 
   /**
    * Desmembrar a string que está no campo "String ISO", valorizando os campos
    * da tabela de BITS.
    */
-  const handlerDesmembrar = () => {
-    //Obter o texto da área de input retirando as quebras de linhas e os espaços:
-    let msgFormatada = msgIso.replace(/\n/g, '').replace(/\s/g, '');
-    //Posição do cursor na string
+  const handlerDesmembrar = (): void => {
+    // Obter o texto da área de input retirando as quebras de linhas e os espaços:
+    let msgFormatada = state.msgIso.replace(/\n/g, '').replace(/\s/g, '');
+    // Posição do cursor na string
     let pos = 0;
 
-    //Obter o código da mensagem:
-    let convertido = hexToAscii(msgFormatada.substr(pos, 8));
-    setCodigoMensagem({ content: convertido, error: parseInt(convertido) ? false : true });
+    // Obter o código da mensagem:
+    let content = hexToAscii(msgFormatada.substr(pos, 8));
+
+    const codigoMensagem = {
+      content,
+      error: parseInt(content, 10) ? false : true,
+    };
     pos += 8;
 
-    //Obter o primeiro mapa de bits:
-    convertido = hexToAscii(msgFormatada.substr(pos, 32));
-    setPrimeiroMapaBits({ content: convertido, error: false });
+    // Obter o primeiro mapa de bits:
+    content = hexToAscii(msgFormatada.substr(pos, 32));
+
+    const primeiroMapaBits = { content, error: false };
+
     pos += 32;
 
-    //Efetuar a conversão para binário considerando o segundo mapa de bits todo zerado.
-    let mapBits = hexa2Binario(convertido + '0000000000000000');
+    // Efetuar a conversão para binário considerando o segundo mapa de bits todo zerado.
+    let mapBits = hexa2Binario(content + '0000000000000000');
 
-    let newBits = [...bits];
+    let newBits = [...state.bits];
 
-    //Se o segundo mapa de bits está presente então descompacta.
+    // Se o segundo mapa de bits está presente então descompacta.
     if (mapBits[0] === '1') {
-      convertido = hexToAscii(msgFormatada.substr(pos, 32));
+      content = hexToAscii(msgFormatada.substr(pos, 32));
 
-      newBits[0] = { ...newBits[0], content: convertido, checked: true, error: false };
+      newBits[0] = {
+        ...newBits[0],
+        content,
+        checked: true,
+        error: false,
+      };
 
       pos += 32;
 
-      //Reformata o mapa de bits completo com as informações do segundo mapa de bits.
-      mapBits = mapBits.slice(0, 64).concat(hexa2Binario(convertido));
+      // Reformata o mapa de bits completo com as informações do segundo mapa de bits.
+      mapBits = mapBits.slice(0, 64).concat(hexa2Binario(content));
     }
 
     const bitsUndefined: number[] = [];
 
-    mapBits.forEach((bit, index) => {
+    mapBits.forEach((bit: string, index: number) => {
       if (bit === '1') {
         index++;
-        if (!newBits.some(mapBit => mapBit.bit === index)) bitsUndefined.push(index);
+        if (!newBits.some((mapBit: MapBit) => mapBit.bit === index)) {
+          bitsUndefined.push(index);
+        }
       }
     });
 
     if (bitsUndefined.length > 0) {
       showMensagem({
         variant: 'error',
-        mensagem: `Os Bits ${bitsUndefined.join(',')} não constam mapeados atualmente!`
+        mensagem: `Os Bits ${bitsUndefined.join(
+          ','
+        )} não constam mapeados atualmente!`,
       });
       return;
     }
 
-    newBits = newBits.map(bit => {
-      if (bit.bit === 1) return bit;
+    newBits = newBits.map((bit: MapBit) => {
+      if (bit.bit === 1) {
+        return bit;
+      }
 
       if (mapBits[bit.bit - 1] === '1') {
-        //Verificar se o bin tem um formato binário:
-        let ehBinario = bit.formato === 'B' || bit.formato === 'AB';
+        // Verificar se o bin tem um formato binário:
+        const ehBinario = bit.formato === 'B' || bit.formato === 'AB';
 
         if (bit.tipo === 'llvar' || bit.tipo === 'lllvar') {
           const tamField = bit.tipo === 'llvar' ? 4 : 6;
 
           const tam = ehBinario
-            ? parseInt(hexToAscii(msgFormatada.substr(pos, tamField)))
-            : parseInt(hexToAscii(msgFormatada.substr(pos, tamField))) * 2;
+            ? parseInt(hexToAscii(msgFormatada.substr(pos, tamField)), 10)
+            : parseInt(hexToAscii(msgFormatada.substr(pos, tamField)), 10) * 2;
 
           pos += tamField;
 
-          convertido = ehBinario
+          content = ehBinario
             ? msgFormatada.substr(pos, tam)
             : hexToAscii(msgFormatada.substr(pos, tam));
 
@@ -175,7 +186,7 @@ export default () => {
         } else {
           const tam = bit.tamanho * 2;
 
-          convertido = ehBinario
+          content = ehBinario
             ? msgFormatada.substr(pos, tam)
             : hexToAscii(msgFormatada.substr(pos, tam));
 
@@ -183,130 +194,73 @@ export default () => {
         }
 
         const error =
-          (bit.formato === 'N' && patt.test(convertido)) ||
-          (bit.tipo === 'fixo' && convertido.length < bit.tamanho);
+          (bit.formato === 'N' && patt.test(content)) ||
+          (bit.tipo === 'fixo' && content.length < bit.tamanho);
 
-        return { ...bit, content: convertido, checked: true, error: error };
+        return { ...bit, content, checked: true, error };
       } else {
         return { ...bit, content: '', checked: false, error: true };
       }
     });
 
-    handlerSetBits(newBits);
+    // Quebrar as linhas no número de definido de colunas.
+    msgFormatada = quebrarLinhas(msgFormatada, state.colunas);
 
-    //Quebrar as linhas no número de definido de colunas.
-    msgFormatada = quebrarLinhas(msgFormatada, colunas);
+    setState({
+      ...state,
+      msgIso: msgFormatada,
+      codigoMensagem,
+      primeiroMapaBits,
+      bits: newBits,
+    });
 
-    setMsgIso(msgFormatada);
-
-    //Se existir algum bit com erro formata a mensagem com alerta:
-    newBits.some(bit => bit.checked && bit.error)
+    // Se existir algum bit com erro formata a mensagem com alerta:
+    newBits.some((bit: MapBit) => bit.checked && bit.error)
       ? showMensagem({
           variant: 'warning',
-          mensagem: 'Área desmembrada, porém existem bits com erros!'
+          mensagem: 'Área desmembrada, porém existem bits com erros!',
         })
-      : showMensagem({ variant: 'success', mensagem: 'Área desmembrada com sucesso!' });
+      : showMensagem({
+          variant: 'success',
+          mensagem: 'Área desmembrada com sucesso!',
+        });
   };
 
-  /**
-   * Setar os bits que foram ligados como 'checked = true'.
-   *
-   * @param value Valor do mapa de bits em formato hexadecimal
-   * @param newBits Lista completa dos bits
-   */
-  const setCheckedBits = (value: string, newBits: MapBit[]) => {
-    let binario = hexa2Binario(value);
+  const handlerGerarInput = (): void => {
+    const msgIso = formatarMensagemInput(state);
 
-    // Verificar se o segundo mapa de bits está selecionado e não está com erro;
-    binario[0] === '1' && !newBits[0].error
-      ? (binario = binario.concat(hexa2Binario(newBits[0].content)))
-      : (binario = binario.concat(hexa2Binario('0000000000000000')));
+    setState({ ...state, msgIso });
 
-    handlerSetBits(
-      newBits.map(bit => {
-        if (binario[bit.bit - 1] === '1') {
-          return { ...bit, checked: true };
-        }
-        return { ...bit, checked: false, content: '', error: true };
-      })
-    );
-  };
-
-  const handlerGerarInput = (
-    newBits?: MapBit[],
-    cdMsg?: FieldDefault,
-    priMapBits?: FieldDefault
-  ) => {
-    //Se o parâmetro não foi passado, definir o default:
-    newBits = newBits === undefined || newBits[0] === undefined ? [...bits] : newBits;
-    cdMsg = cdMsg === undefined ? codigoMensagem : cdMsg;
-    priMapBits = priMapBits === undefined ? primeiroMapaBits : priMapBits;
-
-    //Se existir bits com erro não prosseguir com a geração da input:
-    if (cdMsg.error || priMapBits.error || newBits.some(bit => bit.checked && bit.error)) {
-      showMensagem({
-        variant: 'error',
-        mensagem:
-          'Existem bits que estão com informações inválidas, verificar os destaques em vermelho!'
-      });
-      return;
-    }
-
-    let msgFormatada = convertAsciiToHex(cdMsg.content);
-
-    msgFormatada += convertAsciiToHex(priMapBits.content);
-
-    newBits
-      .filter(bit => bit.checked)
-      .forEach(bit => {
-        let ehBinario = bit.formato === 'B' || bit.formato === 'AB';
-
-        switch (bit.tipo) {
-          case 'llvar':
-            msgFormatada += convertAsciiToHex(bit.content.length.toString().padStart(2, '0'));
-            msgFormatada += ehBinario ? bit.content : convertAsciiToHex(bit.content);
-            break;
-
-          case 'lllvar':
-            msgFormatada += convertAsciiToHex(bit.content.length.toString().padStart(3, '0'));
-            msgFormatada += ehBinario ? bit.content : convertAsciiToHex(bit.content);
-            break;
-
-          default:
-            msgFormatada += ehBinario ? bit.content : convertAsciiToHex(bit.content);
-            break;
-        }
-      });
-
-    //Quebrar as linhas no número de definido de colunas.
-    msgFormatada = quebrarLinhas(msgFormatada, colunas);
-
-    setMsgIso(msgFormatada.toUpperCase());
     showMensagem({ variant: 'success', mensagem: 'Input gerado com sucesso!' });
   };
 
-  const handlerAtualizarInput = () => {
-    const newBits = [...bits];
+  const handlerAtualizarInput = (): void => {
+    const bits = [...state.bits];
 
-    //Atualizar o bit 4, valor da transação, acrescentando 10 centavos.
-    let idx = newBits.findIndex(bit => bit.bit === 4);
-    let content = (parseInt(newBits[idx].content) + 10).toString().padStart(12, '0');
-    newBits[idx] = { ...newBits[idx], content: content };
+    // Atualizar o bit 4, valor da transação, acrescentando 10 centavos.
+    let idx = bits.findIndex((bit: MapBit) => bit.bit === 4);
+    let content = (parseInt(bits[idx].content, 10) + 10)
+      .toString()
+      .padStart(12, '0');
+    bits[idx] = { ...bits[idx], content };
 
-    //Se está presente, atualizar o bit 5, também com 10 centavos.
-    idx = newBits.findIndex(bit => bit.bit === 5);
-    if (newBits[idx].checked) {
-      content = (parseInt(newBits[idx].content) + 10).toString().padStart(12, '0');
-      newBits[idx] = { ...newBits[idx], content: content };
+    // Se está presente, atualizar o bit 5, também com 10 centavos.
+    idx = bits.findIndex((bit: MapBit) => bit.bit === 5);
+
+    if (bits[idx].checked) {
+      content = (parseInt(bits[idx].content, 10) + 10)
+        .toString()
+        .padStart(12, '0');
+      bits[idx] = { ...bits[idx], content };
     }
 
-    //Atualizar o bit 7, data e hora:
-    let hoje = new Date();
-    let dia = hoje
+    // Atualizar o bit 7, data e hora:
+    const hoje = new Date();
+    const dia = hoje
       .getDate()
       .toString()
       .padStart(2, '0');
-    let mes = (hoje.getMonth() + 1).toString().padStart(2, '0');
+    const mes = (hoje.getMonth() + 1).toString().padStart(2, '0');
 
     let hora = hoje
       .getHours()
@@ -323,37 +277,45 @@ export default () => {
       .toString()
       .padStart(2, '0');
 
-    idx = newBits.findIndex(bit => bit.bit === 7);
-    newBits[idx] = { ...newBits[idx], content: mes + dia + hora };
+    idx = bits.findIndex((bit: MapBit) => bit.bit === 7);
+    bits[idx] = { ...bits[idx], content: mes + dia + hora };
 
-    //Atualizar o bit 11:
-    idx = newBits.findIndex(bit => bit.bit === 11);
-    content = (parseInt(newBits[idx].content) + 1).toString().padStart(6, '0');
+    // Atualizar o bit 11:
+    idx = bits.findIndex((bit: MapBit) => bit.bit === 11);
+    content = (parseInt(bits[idx].content, 10) + 1).toString().padStart(6, '0');
     const bit11 = content;
-    newBits[idx] = { ...newBits[idx], content: content };
+    bits[idx] = { ...bits[idx], content };
 
-    //Atualizar o bit 12:
-    idx = newBits.findIndex(bit => bit.bit === 12);
-    newBits[idx] = { ...newBits[idx], content: hora };
+    // Atualizar o bit 12:
+    idx = bits.findIndex((bit: MapBit) => bit.bit === 12);
+    bits[idx] = { ...bits[idx], content: hora };
 
-    //Atualizar o bit 13:
-    idx = newBits.findIndex(bit => bit.bit === 13);
-    newBits[idx] = { ...newBits[idx], content: mes + dia };
+    // Atualizar o bit 13:
+    idx = bits.findIndex((bit: MapBit) => bit.bit === 13);
+    bits[idx] = { ...bits[idx], content: mes + dia };
 
-    //Obter informações do bit 41:
-    idx = newBits.findIndex(bit => bit.bit === 41);
-    const bit41 = newBits[idx];
+    // Obter informações do bit 41:
+    idx = bits.findIndex((bit: MapBit) => bit.bit === 41);
+    const bit41 = bits[idx];
 
-    //Atualizar o bit 37:
-    idx = newBits.findIndex(bit => bit.bit === 37);
+    // Atualizar o bit 37:
+    idx = bits.findIndex((bit: MapBit) => bit.bit === 37);
     content = bit41.content.substr(0, 2) + bit41.content.substr(4, 4) + bit11;
-    newBits[idx] = { ...newBits[idx], content: content };
+    bits[idx] = { ...bits[idx], content };
 
-    setBits(newBits);
-    handlerGerarInput();
+    const newState = { ...state, bits };
+
+    newState.msgIso = formatarMensagemInput(newState);
+
+    setState(newState);
+
+    showMensagem({
+      variant: 'success',
+      mensagem: 'Mensagem atualizada com sucesso!',
+    });
   };
 
-  const handlerAnularInput = () => {
+  const handlerAnularInput = (): void => {
     let bit11 = '';
     let bit12 = '';
     let bit13 = '';
@@ -362,60 +324,153 @@ export default () => {
     let bit38 = '';
     let bit49 = '';
 
-    const newBits = bits.map(bit => {
-      //Desmarcar os bits que não devem vir:
-      if (bit.checked && [26, 39, 46, 52, 53, 62, 63, 126].some(bitNum => bitNum === bit.bit)) {
-        return { ...bit, checked: false, content: '', error: true };
+    const bits = state.bits.map((bit: MapBit) => {
+      // Desmarcar os bits que não devem vir:
+      if (
+        bit.checked &&
+        [26, 39, 46, 52, 53, 62, 63, 126].some(
+          (bitNum: number) => bitNum === bit.bit
+        )
+      ) {
+        return {
+          ...bit,
+          checked: false,
+          content: '',
+          error: true,
+        };
       }
 
-      if (bit.bit === 11) bit11 = bit.content;
+      if (bit.bit === 11) {
+        bit11 = bit.content;
+      }
 
-      if (bit.bit === 12) bit12 = bit.content;
+      if (bit.bit === 12) {
+        bit12 = bit.content;
+      }
 
-      if (bit.bit === 13) bit13 = bit.content;
+      if (bit.bit === 13) {
+        bit13 = bit.content;
+      }
 
       if (bit.bit === 25) {
         const content = bit.content === '' ? '00' : bit.content;
-        return { ...bit, checked: true, content: content, error: false };
+        return {
+          ...bit,
+          checked: true,
+          content,
+          error: false,
+        };
       }
 
-      if (bit.bit === 32) bit32 = bit.content === '' ? '00000000000' : bit.content;
+      if (bit.bit === 32) {
+        bit32 = bit.content === '' ? '00000000000' : bit.content;
+      }
 
-      if (bit.bit === 33) bit33 = bit.content === '' ? '00000000000' : bit.content;
+      if (bit.bit === 33) {
+        bit33 = bit.content === '' ? '00000000000' : bit.content;
+      }
 
       if (bit.bit === 38) {
         bit38 = bit.content === '' ? '000000' : bit.content;
-        return { ...bit, checked: true, content: bit38, error: false };
+        return {
+          ...bit,
+          checked: true,
+          content: bit38,
+          error: false,
+        };
       }
 
-      if (bit.bit === 49) bit49 = bit.content;
+      if (bit.bit === 49) {
+        bit49 = bit.content;
+      }
 
       if (bit.bit === 90) {
-        let content = codigoMensagem.content + bit11 + bit12 + bit13;
-        content += bit49 === '846' ? bit38.concat('0000000000000000') : bit32.concat(bit33);
+        let content = state.codigoMensagem.content + bit11 + bit12 + bit13;
+
+        content +=
+          bit49 === '846'
+            ? bit38.concat('0000000000000000')
+            : bit32.concat(bit33);
+
         const error = content.length < bit.tamanho;
-        return { ...bit, checked: true, content: content, error: error };
+
+        return { ...bit, checked: true, content, error };
       }
 
       return bit;
     });
 
-    //Valorizar o código da mensagem como anulação = 0400.
-    const cdMsg = { content: '0400', error: false };
-    setCodigoMensagem(cdMsg);
-    
-    const mapaCompleto = gerarMapaDeBits(newBits);
+    // Ligar o bit 1, segundo mapa de bits.
+    bits[0] = { ...bits[0], checked: true, error: false };
 
-    //Valorizar o primeiro mapa de bits com os novos bits de anulação.
-    const priMapBits = { content: mapaCompleto.slice(0, 16), error: false };
-    setPrimeiroMapaBits(priMapBits);
+    const mapaCompleto = gerarMapaDeBits(bits);
 
-    //Atualizar o segundo mapa de bits se ele estiver chekado:
-    if (newBits[0].checked)
-      newBits[0] = { ...newBits[0], content: mapaCompleto.slice(16) };
+    // Formatar o conteúdo do segundo mapa de bits.
+    bits[0] = { ...bits[0], content: mapaCompleto.slice(16) };
 
-    setBits(newBits);
-    handlerGerarInput(newBits, cdMsg, priMapBits);
+    // Valorizar o código da mensagem como anulação = 0400.
+    const codigoMensagem = { content: '0400', error: false };
+
+    // Valorizar o primeiro mapa de bits com os novos bits de anulação.
+    const primeiroMapaBits = {
+      content: mapaCompleto.slice(0, 16),
+      error: false,
+    };
+
+    const newState = { ...state, codigoMensagem, primeiroMapaBits, bits };
+
+    newState.msgIso = formatarMensagemInput(newState);
+
+    setState(newState);
+
+    showMensagem({
+      variant: 'success',
+      mensagem: 'Mensagem anulada com sucesso!',
+    });
+  };
+
+  /**
+   * Gerar a sting da input da mensagem ISO.
+   *
+   * @param state Estado atualizado para a formatação da input.
+   */
+  const formatarMensagemInput = (stateAtul: State): string => {
+    const { codigoMensagem, primeiroMapaBits, bits } = stateAtul;
+
+    let msgIso = convertAsciiToHex(codigoMensagem.content);
+
+    msgIso += convertAsciiToHex(primeiroMapaBits.content);
+
+    bits
+      .filter((bit: MapBit) => bit.checked)
+      .forEach((bit: MapBit) => {
+        const ehBinario = bit.formato === 'B' || bit.formato === 'AB';
+
+        switch (bit.tipo) {
+          case 'llvar':
+            msgIso += convertAsciiToHex(
+              bit.content.length.toString().padStart(2, '0')
+            );
+            msgIso += ehBinario ? bit.content : convertAsciiToHex(bit.content);
+            break;
+
+          case 'lllvar':
+            msgIso += convertAsciiToHex(
+              bit.content.length.toString().padStart(3, '0')
+            );
+            msgIso += ehBinario ? bit.content : convertAsciiToHex(bit.content);
+            break;
+
+          default:
+            msgIso += ehBinario ? bit.content : convertAsciiToHex(bit.content);
+            break;
+        }
+      });
+
+    // Quebrar as linhas no número de definido de colunas.
+    msgIso = quebrarLinhas(msgIso, state.colunas).toUpperCase();
+
+    return msgIso;
   };
 
   return (
@@ -427,32 +482,24 @@ export default () => {
         handlerAtualizarInput={handlerAtualizarInput}
         handlerAnularInput={handlerAnularInput}
         handlerSetViaYMRB={handlerSetViaYMRB}
-        colunas={colunas}
-        viaYMRB={viaYMRB}
-        setColunas={setColunas}
-        msgIso={msgIso}
-        setMsgIso={setMsgIso}
-        bitsError={bitsError}
+        stateDefault={state}
+        setStateDefault={setState}
       />
       <BitTable
         bandeira="elo"
-        bits={bits}
-        setBits={handlerSetBits}
-        codigoMensagem={codigoMensagem}
-        setCodigoMensagem={setCodigoMensagem}
-        primeiroMapaBits={primeiroMapaBits}
-        setPrimeiroMapaBits={setPrimeiroMapaBits}
-        setCheckedBits={setCheckedBits}
+        stateDefault={state}
+        setStateDefault={setState}
       />
       <Snackbar
         anchorOrigin={{
           vertical: 'top',
-          horizontal: 'center'
+          horizontal: 'center',
         }}
         open={open}
         autoHideDuration={6000}
         onClose={handleClose}
-        onExited={handleExited}>
+        onExited={handleExited}
+      >
         <Message
           onClose={handleClose}
           variant={mensagem ? mensagem.variant : 'error'}
@@ -463,8 +510,8 @@ export default () => {
   );
 };
 
-//Converter a String em HEX para ASCII
-function hexToAscii(txt_hex: string) {
+// Converter a String em HEX para ASCII
+function hexToAscii(txt_hex: string): string {
   let txt_ascii = '';
 
   for (let i = 0; i < txt_hex.length; i += 2) {
@@ -474,8 +521,8 @@ function hexToAscii(txt_hex: string) {
   return txt_ascii;
 }
 
-//Converter a String de ASCII para HEX
-function convertAsciiToHex(txt_ascii: string) {
+// Converter a String de ASCII para HEX
+function convertAsciiToHex(txt_ascii: string): string {
   let txt_hex = '';
 
   for (let i = 0; i < txt_ascii.length; i++) {
@@ -485,8 +532,8 @@ function convertAsciiToHex(txt_ascii: string) {
   return txt_hex;
 }
 
-//Irá formatar a input com o número de colunas informado no campo Colunas.
-function quebrarLinhas(txtInput: string, colunas: number) {
+// Irá formatar a input com o número de colunas informado no campo Colunas.
+function quebrarLinhas(txtInput: string, colunas: number): string {
   if (colunas === 0) {
     // Se o número de colunas for igual zeros, não quebra o texto
     return txtInput;

@@ -50,8 +50,8 @@ export interface Props {
   variant: keyof typeof variantIcon;
 }
 
-export default (props: Props) => {
-  const classes = useStyles();
+export default (props: Props): JSX.Element => {
+  const classes = useStyles(props);
   const { className, message, onClose, variant, ...other } = props;
   const Icon = variantIcon[variant];
 
@@ -66,11 +66,16 @@ export default (props: Props) => {
         </span>
       }
       action={[
-        <IconButton key="close" aria-label="close" color="inherit" onClick={onClose}>
+        <IconButton
+          key="close"
+          aria-label="close"
+          color="inherit"
+          onClick={onClose}
+        >
           <CloseIcon className={classes.icon} />
         </IconButton>,
       ]}
       {...other}
     />
   );
-}
+};

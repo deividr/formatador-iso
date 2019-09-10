@@ -1,14 +1,36 @@
-import MapBit from './interfaces/MapBit';
+import MapBit from './interfaces/Interfaces';
+
+/**
+ * Setar os bits que foram ligados como 'checked = true'.
+ *
+ * @param value Valor do mapa de bits em formato hexadecimal
+ * @param bits Lista completa dos bits
+ */
+export const setCheckedBits = (value: string, bits: MapBit[]): MapBit[] => {
+  let binario = hexa2Binario(value);
+
+  // Verificar se o segundo mapa de bits está selecionado e não está com erro;
+  binario[0] === '1' && !bits[0].error
+    ? (binario = binario.concat(hexa2Binario(bits[0].content)))
+    : (binario = binario.concat(hexa2Binario('0000000000000000')));
+
+  return bits.map((bit: MapBit) => {
+    if (binario[bit.bit - 1] === '1') {
+      return { ...bit, checked: true };
+    }
+    return { ...bit, checked: false, content: '', error: true };
+  });
+};
 
 /**
  * Gerar o valor do primeiro e segundo mapa de bits.
  *
- * @param newBits Mapa de bits completo
+ * @param bits Mapa de bits completo
  */
-export const gerarMapaDeBits = (newBits: MapBit[]) => {
+export const gerarMapaDeBits = (bits: MapBit[]): string => {
   const binario = new Array(128).fill('0');
 
-  newBits.forEach(bit => {
+  bits.forEach((bit: MapBit) => {
     binario[bit.bit - 1] = bit.checked ? 1 : 0;
   });
 
@@ -20,33 +42,33 @@ export const gerarMapaDeBits = (newBits: MapBit[]) => {
  *
  * @param value Valor binário a serem convertidos.
  */
-export const binario2hexa = (value: string) => {
+export const binario2hexa = (value: string): string => {
   const array = value.match(/.{1,4}/g) as RegExpMatchArray;
-  return array.map(value => parseInt(value, 2).toString(16)).join('');
+  return array.map((char: string) => parseInt(char, 2).toString(16)).join('');
 };
 
 /**
  * Converter string em binário.
- * 
+ *
  * @param value String a ser convertida em binário.
  */
-export const hexa2Binario = (value: string) => {
+export const hexa2Binario = (value: string): string[] => {
   return [].map
-    .call(value, byte =>
+    .call(value, (byte: string) =>
       parseInt(byte, 16)
         .toString(2)
         .padStart(4, '0')
     )
     .join('')
     .split('');
-}
+};
 
 /**
  * Converter um caracter ASCII em EBCDIC.
- * 
+ *
  * @param char_ascii Caracter ASCII que será convertido em EBCDIC
  */
-export const ascii2ebcdic = (char_ascii: string) => {
+export const ascii2ebcdic = (char_ascii: string): string => {
   let char_ebcdic;
 
   switch (char_ascii.toUpperCase()) {
@@ -439,14 +461,14 @@ export const ascii2ebcdic = (char_ascii: string) => {
   }
 
   return char_ebcdic;
-}
+};
 
 /**
  * Converter um caracter EBCDIC em ASCII.
- * 
+ *
  * @param char_ascii Caracter EBCDIC que será convertido em ASCII.
  */
-export const ebcdic2ascii = (char_ebcdic: string) => {
+export const ebcdic2ascii = (char_ebcdic: string): string => {
   let char_ascii;
 
   switch (char_ebcdic) {
@@ -817,6 +839,6 @@ export const ebcdic2ascii = (char_ebcdic: string) => {
       char_ascii = char_ebcdic;
   }
 
-  //Retorna o caracter ASCII
+  // Retorna o caracter ASCII
   return String.fromCharCode(parseInt(char_ascii, 16));
-}
+};
