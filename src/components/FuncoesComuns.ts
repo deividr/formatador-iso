@@ -38,6 +38,27 @@ export const gerarMapaDeBits = (bits: MapBit[]): string => {
 };
 
 /**
+ * Quebrar o texto de entrada na quantidade de colunas solicitadas.
+ *
+ * @param txtInput Texto que será quebrado em colunas.
+ * @param colunas Quantidade de colunas que deve possuir cada linha.
+ */
+export const quebrarLinhas = (txtInput: string, colunas: number): string => {
+  if (colunas === 0) {
+    // Se o número de colunas for igual zeros, não quebra o texto
+    return txtInput;
+  }
+
+  let txtOutput = '';
+
+  for (let i = 0; i < txtInput.length; i += colunas) {
+    txtOutput += txtInput.substr(i, colunas) + '\n';
+  }
+
+  return txtOutput;
+};
+
+/**
  * Converter uma string de binário em informação hexadecimal.
  *
  * @param value Valor binário a serem convertidos.
@@ -61,6 +82,36 @@ export const hexa2Binario = (value: string): string[] => {
     )
     .join('')
     .split('');
+};
+
+/**
+ * Converter a string de entrada em valor ASCII
+ *
+ * @param txt_hex Valor a ser convertido para ASCII
+ */
+export const hexa2ascii = (txt_hex: string): string => {
+  let txt_ascii = '';
+
+  for (let i = 0; i < txt_hex.length; i += 2) {
+    txt_ascii += ebcdic2ascii(txt_hex.substr(i, 2));
+  }
+
+  return txt_ascii;
+};
+
+/**
+ * Converter o valor passado de ASCII para HEXA.
+ *
+ * @param txt_ascii Valor a ser convertido para HEXA
+ */
+export const ascii2hexa = (txt_ascii: string): string => {
+  let txt_hex = '';
+
+  for (let i = 0; i < txt_ascii.length; i++) {
+    txt_hex += ascii2ebcdic(txt_ascii.charCodeAt(i).toString(16));
+  }
+
+  return txt_hex;
 };
 
 /**

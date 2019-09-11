@@ -17,10 +17,8 @@ import { setCheckedBits } from '../components/FuncoesComuns';
 
 import Menu from '@material-ui/icons/Menu';
 import BitRowTable from './BitTableRow';
-import MapBit from './interfaces/Interfaces';
+import MapBit, { State as StateDefault } from './interfaces/Interfaces';
 import DialogBit from './DialogBit';
-
-import { State as StateDefault } from '../pages/Elo';
 
 const StyledTableCell = withStyles((theme: Theme) =>
   createStyles({
@@ -114,11 +112,10 @@ class BitTable extends React.PureComponent<BitTableProps, { open: boolean }> {
     const { value, name, maxLength } = e.target;
 
     /**
-     * Se o tamanho for fixo e o conteúdo digitado for menor, ou,
-     * o tamanho não é fixo porém o campo não está preenchido então
-     * flaga o bit com erro.
+     * Efetuar consistências do campo.
      */
     const error =
+      (bit.formato === 'B' && value.length % 2 !== 0) ||
       (bit.tipo === 'fixo' && value.length < maxLength) ||
       (bit.tipo !== 'fixo' && value.length === 0);
 

@@ -10,9 +10,7 @@ import {
 } from '@material-ui/core';
 
 import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
-import MapBit from './interfaces/Interfaces';
-
-import { State as StateDefault } from '../pages/Elo';
+import MapBit, { State as StateDefault } from './interfaces/Interfaces';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -50,6 +48,7 @@ const Cabecalho = (props: CabecalhoProps): JSX.Element => {
   } = props;
 
   const bitsError =
+    stateDefault.headerMensagem.error ||
     stateDefault.codigoMensagem.error ||
     stateDefault.primeiroMapaBits.error ||
     stateDefault.bits.some((bit: MapBit) => bit.checked && bit.error);

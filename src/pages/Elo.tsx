@@ -5,28 +5,13 @@ import BitTable from '../components/BitTable';
 import mapBitElo from '../components/MapBitsElo';
 import Message from '../components/Message';
 import { Snackbar } from '@material-ui/core';
-import { gerarMapaDeBits, hexa2Binario } from '../components/FuncoesComuns';
+import {
+  gerarMapaDeBits,
+  hexa2Binario,
+  quebrarLinhas,
+} from '../components/FuncoesComuns';
 
-import MapBit from '../components/interfaces/Interfaces';
-
-export type State = {
-  msgIso: string;
-  bits: MapBit[];
-  codigoMensagem: FieldDefault;
-  primeiroMapaBits: FieldDefault;
-  colunas: number;
-  viaYMRB: boolean;
-};
-
-export type Mensagem = {
-  variant: 'error' | 'success' | 'warning' | 'info';
-  mensagem: string;
-};
-
-export type FieldDefault = {
-  content: string;
-  error: boolean;
-};
+import MapBit, { State, Mensagem } from '../components/interfaces/Interfaces';
 
 export default (): JSX.Element => {
   const patt = new RegExp('[^0-9]');
@@ -43,6 +28,7 @@ export default (): JSX.Element => {
   const [state, setState] = useState<State>({
     msgIso: '',
     bits: initialList,
+    headerMensagem: { content: '', error: false },
     codigoMensagem: { content: '', error: true },
     primeiroMapaBits: { content: '', error: true },
     colunas: 32,
@@ -246,7 +232,7 @@ export default (): JSX.Element => {
 
     // Atualizar o bit 4, valor da transação, acrescentando 10 centavos.
     let idx = bits.findIndex((bit: MapBit) => bit.bit === 4);
-    let content = (parseInt(bits[idx].content, 10) + 10)
+    let content = (parseInt(bits[idx].content, 10) + 1)
       .toString()
       .padStart(12, '0');
     bits[idx] = { ...bits[idx], content };
@@ -255,7 +241,7 @@ export default (): JSX.Element => {
     idx = bits.findIndex((bit: MapBit) => bit.bit === 5);
 
     if (bits[idx].checked) {
-      content = (parseInt(bits[idx].content, 10) + 10)
+      content = (parseInt(bits[idx].content, 10) + 1)
         .toString()
         .padStart(12, '0');
       bits[idx] = { ...bits[idx], content };
@@ -537,20 +523,4 @@ function convertAsciiToHex(txt_ascii: string): string {
   }
 
   return txt_hex;
-}
-
-// Irá formatar a input com o número de colunas informado no campo Colunas.
-function quebrarLinhas(txtInput: string, colunas: number): string {
-  if (colunas === 0) {
-    // Se o número de colunas for igual zeros, não quebra o texto
-    return txtInput;
-  }
-
-  let txtOutput = '';
-
-  for (let i = 0; i < txtInput.length; i += colunas) {
-    txtOutput += txtInput.substr(i, colunas) + '\n';
-  }
-
-  return txtOutput;
 }

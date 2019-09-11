@@ -13,17 +13,16 @@ import {
   Button,
 } from '@material-ui/core';
 
-import MapBit from './interfaces/Interfaces';
+import MapBit, { State as StateDefault } from './interfaces/Interfaces';
 import { gerarMapaDeBits } from './FuncoesComuns';
-import { State as StateDefault } from '../pages/Elo';
 
-export interface DialogBitProps {
+export type DialogBitProps = {
   open: boolean;
   stateDefault: StateDefault;
   onClose: () => void;
   handleChange1Mapa: (value: string) => void;
   handleChange2Mapa: (value: string) => void;
-}
+};
 
 const DialogBit = (props: DialogBitProps): JSX.Element => {
   const { open, onClose, handleChange1Mapa, handleChange2Mapa } = props;
