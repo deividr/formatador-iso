@@ -7,10 +7,7 @@ import Message from '../components/Message';
 import { Snackbar } from '@material-ui/core';
 import { gerarMapaDeBits, hexa2Binario } from '../components/FuncoesComuns';
 
-import MapBit, {
-  Mensagem,
-  FieldDefault,
-} from '../components/interfaces/Interfaces';
+import MapBit from '../components/interfaces/Interfaces';
 
 export type State = {
   msgIso: string;
@@ -19,6 +16,16 @@ export type State = {
   primeiroMapaBits: FieldDefault;
   colunas: number;
   viaYMRB: boolean;
+};
+
+export type Mensagem = {
+  variant: 'error' | 'success' | 'warning' | 'info';
+  mensagem: string;
+};
+
+export type FieldDefault = {
+  content: string;
+  error: boolean;
 };
 
 export default (): JSX.Element => {

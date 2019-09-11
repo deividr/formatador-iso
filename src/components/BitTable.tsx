@@ -32,11 +32,11 @@ const StyledTableCell = withStyles((theme: Theme) =>
   })
 )(TableCell);
 
-interface BitTableProps {
+export type BitTableProps = {
   bandeira: string;
   stateDefault: StateDefault;
   setStateDefault: (stateDefault: StateDefault) => void;
-}
+};
 
 class BitTable extends React.PureComponent<BitTableProps, { open: boolean }> {
   pattHexa: RegExp;
