@@ -13,7 +13,29 @@ import {
 
 import MapBit, { State, Mensagem } from '../components/interfaces/Interfaces';
 
-export default (): JSX.Element => {
+// Converter a String em HEX para ASCII
+function hexToAscii(txt_hex: string): string {
+  let txt_ascii = '';
+
+  for (let i = 0; i < txt_hex.length; i += 2) {
+    txt_ascii += String.fromCharCode(parseInt(txt_hex.substr(i, 2), 16));
+  }
+
+  return txt_ascii;
+}
+
+// Converter a String de ASCII para HEX
+function convertAsciiToHex(txt_ascii: string): string {
+  let txt_hex = '';
+
+  for (let i = 0; i < txt_ascii.length; i++) {
+    txt_hex += Number(txt_ascii.charCodeAt(i)).toString(16);
+  }
+
+  return txt_hex;
+}
+
+const Elo = (): JSX.Element => {
   const patt = new RegExp('[^0-9]');
 
   const initialList = mapBitElo.map<MapBit>((bit: any) => {
@@ -503,24 +525,4 @@ export default (): JSX.Element => {
   );
 };
 
-// Converter a String em HEX para ASCII
-function hexToAscii(txt_hex: string): string {
-  let txt_ascii = '';
-
-  for (let i = 0; i < txt_hex.length; i += 2) {
-    txt_ascii += String.fromCharCode(parseInt(txt_hex.substr(i, 2), 16));
-  }
-
-  return txt_ascii;
-}
-
-// Converter a String de ASCII para HEX
-function convertAsciiToHex(txt_ascii: string): string {
-  let txt_hex = '';
-
-  for (let i = 0; i < txt_ascii.length; i++) {
-    txt_hex += Number(txt_ascii.charCodeAt(i)).toString(16);
-  }
-
-  return txt_hex;
-}
+export default Elo;

@@ -38,7 +38,12 @@ function Header(props: HeaderProps): JSX.Element {
           <Box flexGrow={1}>
             <Typography variant="h4">{titulo}</Typography>
           </Box>
-          <Link color="inherit" component={RouterLink} to="/" underline="none">
+          <Link
+            color="inherit"
+            component={RouterLink}
+            to="/home"
+            underline="none"
+          >
             <Button color="inherit">Sair</Button>
           </Link>
         </Toolbar>
