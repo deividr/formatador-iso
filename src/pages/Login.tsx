@@ -11,6 +11,7 @@ import {
   InputAdornment,
   IconButton,
   Button,
+  CircularProgress,
 } from '@material-ui/core';
 
 import Visibility from '@material-ui/icons/Visibility';
@@ -28,6 +29,10 @@ const useStyles = makeStyles(
         justifyContent: 'center',
         height: '90vh',
       },
+      wrapper: {
+        position: 'relative',
+        width: '100%',
+      },
       paper: {
         display: 'flex',
         flexWrap: 'wrap',
@@ -40,7 +45,7 @@ const useStyles = makeStyles(
         width: '100%',
         marginBottom: '20px',
       },
-      bottom: {
+      button: {
         marginTop: '10px',
         height: '50px',
         width: '100%',
@@ -51,6 +56,14 @@ const useStyles = makeStyles(
       icon: {
         fontSize: '80px',
         marginBottom: '10px',
+      },
+      buttonProgress: {
+        // color: green[500],
+        position: 'absolute',
+        top: '50%',
+        left: '50%',
+        marginTop: -9,
+        marginLeft: -12,
       },
     })
 );
@@ -71,6 +84,8 @@ export default (props: any): JSX.Element => {
     showPassword: false,
     error: '',
   });
+
+  const [loading, setLoading] = useState<boolean>(false);
 
   const handleChange = (
     prop: keyof State
@@ -98,6 +113,8 @@ export default (props: any): JSX.Element => {
     if (!usuario || !password) {
       setState({ ...state, error: 'Preencher usuário e senha' });
     } else {
+      setLoading(true);
+
       try {
         const res = await api.post('/auth', {
           login: usuario,
@@ -110,6 +127,7 @@ export default (props: any): JSX.Element => {
 
         props.history.push('/home');
       } catch (err) {
+        setLoading(false);
         setState({ ...state, error: 'Usuário ou senha inválida!' });
       }
     }
@@ -152,14 +170,20 @@ export default (props: any): JSX.Element => {
             />
           </FormControl>
           {state.error && <Typography color="error">{state.error}</Typography>}
-          <Button
-            type="submit"
-            variant="contained"
-            color="secondary"
-            className={classes.bottom}
-          >
-            Entrar
-          </Button>
+          <div className={classes.wrapper}>
+            <Button
+              type="submit"
+              variant="contained"
+              color="secondary"
+              className={classes.button}
+              disabled={loading}
+            >
+              {loading ? 'Verificando...' : 'Entrar'}
+            </Button>
+            {loading && (
+              <CircularProgress size={24} className={classes.buttonProgress} />
+            )}
+          </div>
         </Paper>
       </form>
     </Container>
