@@ -317,7 +317,6 @@ export default (): JSX.Element => {
     // Atualizar o bit 11:
     idx = bits.findIndex((bit: MapBit) => bit.bit === 11);
     content = (parseInt(bits[idx].content, 10) + 1).toString().padStart(6, '0');
-    const bit11 = content;
     bits[idx] = { ...bits[idx], content };
 
     // Atualizar o bit 12:
@@ -328,13 +327,11 @@ export default (): JSX.Element => {
     idx = bits.findIndex((bit: MapBit) => bit.bit === 13);
     bits[idx] = { ...bits[idx], content: mes + dia };
 
-    // Obter informações do bit 41:
-    idx = bits.findIndex((bit: MapBit) => bit.bit === 41);
-    const bit41 = bits[idx];
-
     // Atualizar o bit 37:
     idx = bits.findIndex((bit: MapBit) => bit.bit === 37);
-    content = bit41.content.substr(0, 2) + bit41.content.substr(4, 4) + bit11;
+    content = (parseInt(bits[idx].content, 10) + 1)
+      .toString()
+      .padStart(12, '0');
     bits[idx] = { ...bits[idx], content };
 
     const newState = { ...state, bits };
