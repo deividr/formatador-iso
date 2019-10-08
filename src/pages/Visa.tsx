@@ -31,7 +31,8 @@ const theme = createMuiTheme({
 });
 
 export default (): JSX.Element => {
-  const patt = new RegExp('[^0-9]');
+  const pattNum = new RegExp('[^0-9]');
+  const pattComp = new RegExp('[^0-9A-Fa-f]');
 
   const initialList = mapBitVisa.map<MapBit>((bit: any) => {
     bit.content = '';
@@ -225,8 +226,8 @@ export default (): JSX.Element => {
         pos += tam;
 
         const error =
-          (bit.formato === 'N' && patt.test(content)) ||
-          (bit.formato === 'P' && patt.test(content)) ||
+          (bit.formato === 'N' && pattNum.test(content)) ||
+          (bit.formato === 'P' && pattComp.test(content)) ||
           (bit.tipo === 'fixo' && content.length < bit.tamanho);
 
         return { ...bit, content, checked: true, error };

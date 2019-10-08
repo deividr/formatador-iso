@@ -11,8 +11,10 @@ interface BitRowProps {
 }
 
 function BitTableRow(props: BitRowProps): JSX.Element {
-  const patt = new RegExp('[^0-9]');
   const { bit, handleChange } = props;
+
+  const patt =
+    bit.formato === 'N' ? new RegExp('[^0-9]') : new RegExp('[^0-9A-Fa-f]');
 
   return (
     <TableRow>
@@ -47,11 +49,13 @@ function BitTableRow(props: BitRowProps): JSX.Element {
           error={bit.error}
           value={bit.content}
           onChange={(e: React.ChangeEvent<HTMLInputElement>): void => {
-            if (bit.formato === 'N' || bit.formato === 'P') {
-              if (patt.test(e.target.value)) {
-                return;
-              }
+            if (
+              (bit.formato === 'N' || bit.formato === 'P') &&
+              patt.test(e.target.value)
+            ) {
+              return;
             }
+
             bit.bit === 1 ? handleChange(e.target.value) : handleChange(e, bit);
           }}
         />
