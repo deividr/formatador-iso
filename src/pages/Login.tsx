@@ -18,7 +18,7 @@ import Visibility from '@material-ui/icons/Visibility';
 import VisibilityOff from '@material-ui/icons/VisibilityOff';
 import { makeStyles, createStyles } from '@material-ui/styles';
 import FingerprintIcon from '@material-ui/icons/Fingerprint';
-import { login } from '../services/auth';
+import { login, isAuthenticated } from '../services/auth';
 
 const useStyles = makeStyles(
   (): Record<any, any> =>
@@ -75,7 +75,7 @@ export type State = {
   error: string;
 };
 
-export default (props: any): JSX.Element => {
+const Login = (props: any): JSX.Element => {
   const classes = useStyles();
 
   const [state, setState] = useState<State>({
@@ -124,9 +124,10 @@ export default (props: any): JSX.Element => {
         const { token, expiresIn } = res.data;
 
         login({ token, expiresIn });
-
+        console.log(props);
         props.history.push('/home');
       } catch (err) {
+        console.log(err);
         setLoading(false);
         setState({ ...state, error: 'Usuário ou senha inválida!' });
       }
@@ -189,3 +190,17 @@ export default (props: any): JSX.Element => {
     </Container>
   );
 };
+
+class LoginComponent extends React.Component<any> {
+  componentWillMount(): void {
+    if (isAuthenticated()) {
+      this.props.history.push('/home');
+    }
+  }
+
+  render(): JSX.Element {
+    return <Login {...this.props} />;
+  }
+}
+
+export default LoginComponent;
