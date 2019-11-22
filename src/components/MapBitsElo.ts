@@ -369,6 +369,14 @@ export default [
   },
 
   {
+    bit: 107,
+    tipo: 'lllvar',
+    formato: 'B',
+    tamanho: 999,
+    descricao: 'Dados de Transações Específicas',
+  },
+
+  {
     bit: 126,
     tipo: 'lllvar',
     formato: 'A',
