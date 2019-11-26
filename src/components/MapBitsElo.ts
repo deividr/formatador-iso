@@ -1,3 +1,13 @@
+/**
+ * Configuração dos bits tratados na mensagem ISO-8583 da ELO.
+ *
+ * Descrição dos domínios do formato:
+ *    A = Alfanumérico
+ *    N = Numérico
+ *    B = Binário
+ *    AB = Alfanumérico e Binário
+ *    T = TLF (Tag, Length, Value) **** Ainda não implementado ****
+ */
 export default [
   {
     bit: 1,

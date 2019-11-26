@@ -92,17 +92,9 @@ const Elo = (): JSX.Element => {
   };
 
   const handlerSetViaYMRB = (checked: boolean): void => {
-    const tamanho = checked ? 4 : 16;
-
     setState({
       ...state,
       viaYMRB: checked,
-      bits: state.bits.map((bit: MapBit) => {
-        if (bit.bit === 52) {
-          return { ...bit, tamanho };
-        }
-        return bit;
-      }),
     });
   };
 
@@ -187,9 +179,8 @@ const Elo = (): JSX.Element => {
         if (bit.tipo === 'llvar' || bit.tipo === 'lllvar') {
           const tamField = bit.tipo === 'llvar' ? 4 : 6;
 
-          const tam = ehBinario
-            ? parseInt(hexToAscii(msgFormatada.substr(pos, tamField)), 10)
-            : parseInt(hexToAscii(msgFormatada.substr(pos, tamField)), 10) * 2;
+          const tam =
+            parseInt(hexToAscii(msgFormatada.substr(pos, tamField)), 10) * 2;
 
           pos += tamField;
 
@@ -199,11 +190,17 @@ const Elo = (): JSX.Element => {
 
           pos += tam;
         } else {
-          const tam = bit.tamanho * 2;
+          let tam = bit.tamanho * 2;
 
-          content = ehBinario
-            ? msgFormatada.substr(pos, tam)
-            : hexToAscii(msgFormatada.substr(pos, tam));
+          // Se o bit é o 52 e mensagem via YMRB, a senha não vem convertida.
+          if (bit.bit === 52 && state.viaYMRB) {
+            tam /= 2;
+            content = msgFormatada.substr(pos, tam);
+          } else {
+            content = ehBinario
+              ? msgFormatada.substr(pos, tam)
+              : hexToAscii(msgFormatada.substr(pos, tam));
+          }
 
           pos += tam;
         }
@@ -331,12 +328,12 @@ const Elo = (): JSX.Element => {
   };
 
   const handlerAnularInput = (): void => {
-    let bit11 = '';
-    let bit12 = '';
-    let bit13 = '';
-    let bit32 = '';
-    let bit33 = '';
-    let bit38 = '';
+    let bit11 = '000000';
+    let bit12 = '000000';
+    let bit13 = '0000';
+    let bit32 = '00000000000';
+    let bit33 = '00000000000';
+    let bit38 = '999999';
     let bit49 = '';
 
     const bits = state.bits.map((bit: MapBit) => {
@@ -355,15 +352,15 @@ const Elo = (): JSX.Element => {
         };
       }
 
-      if (bit.bit === 11) {
+      if (bit.bit === 11 && bit.checked) {
         bit11 = bit.content;
       }
 
-      if (bit.bit === 12) {
+      if (bit.bit === 12 && bit.checked) {
         bit12 = bit.content;
       }
 
-      if (bit.bit === 13) {
+      if (bit.bit === 13 && bit.checked) {
         bit13 = bit.content;
       }
 
@@ -377,16 +374,16 @@ const Elo = (): JSX.Element => {
         };
       }
 
-      if (bit.bit === 32) {
-        bit32 = bit.content === '' ? '00000000000' : bit.content;
+      if (bit.bit === 32 && bit.checked) {
+        bit32 = bit.content.padStart(11, '0');
       }
 
-      if (bit.bit === 33) {
-        bit33 = bit.content === '' ? '00000000000' : bit.content;
+      if (bit.bit === 33 && bit.checked) {
+        bit33 = bit.content.padStart(11, '0');
       }
 
       if (bit.bit === 38) {
-        bit38 = bit.content === '' ? '000000' : bit.content;
+        bit38 = bit.content === '' ? '999999' : bit.content;
         return {
           ...bit,
           checked: true,
@@ -461,18 +458,16 @@ const Elo = (): JSX.Element => {
       .forEach((bit: MapBit) => {
         const ehBinario = bit.formato === 'B' || bit.formato === 'AB';
 
+        const tam = ehBinario ? bit.content.length / 2 : bit.content.length;
+
         switch (bit.tipo) {
           case 'llvar':
-            msgIso += convertAsciiToHex(
-              bit.content.length.toString().padStart(2, '0')
-            );
+            msgIso += convertAsciiToHex(tam.toString().padStart(2, '0'));
             msgIso += ehBinario ? bit.content : convertAsciiToHex(bit.content);
             break;
 
           case 'lllvar':
-            msgIso += convertAsciiToHex(
-              bit.content.length.toString().padStart(3, '0')
-            );
+            msgIso += convertAsciiToHex(tam.toString().padStart(3, '0'));
             msgIso += ehBinario ? bit.content : convertAsciiToHex(bit.content);
             break;
 
