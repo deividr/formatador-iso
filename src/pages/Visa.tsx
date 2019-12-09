@@ -199,7 +199,7 @@ export default (): JSX.Element => {
         const ehBinario = bit.formato === 'B';
         const ehCompactado = bit.formato === 'P';
 
-        let tam = bit.formato === 'A' ? bit.tamanho * 2 : bit.tamanho;
+        let tam = bit.formato !== 'P' ? bit.tamanho * 2 : bit.tamanho;
 
         // Se for campo várivel.
         if (bit.tipo === 'llvar' || bit.tipo === 'lllvar') {
