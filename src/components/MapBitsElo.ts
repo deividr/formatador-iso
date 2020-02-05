@@ -387,6 +387,14 @@ export default [
   },
 
   {
+    bit: 122,
+    tipo: 'lllvar',
+    formato: 'A',
+    tamanho: 999,
+    descricao: 'Dados Adicionais de Autenticação',
+  },
+
+  {
     bit: 126,
     tipo: 'lllvar',
     formato: 'A',
