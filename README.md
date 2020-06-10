@@ -1,68 +1,59 @@
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+<div align="center">
+  <h1 style="font-size: 150px">✏️</h1>
+  <h1>Formatador ISO 8583</h1>
+</div>
 
-## Available Scripts
+This is a financial message formatter in the [ISO 8583](https://pt.wikipedia.org/wiki/ISO_8583) standard, used by companies like VISA, MASTER and ELO.
 
-In the project directory, you can run:
+# 📸 Screenshots
 
-### `npm start`
+![Login](.github/assets/login.jpg)
+![VisaHome](.github/assets/visa_home.jpg)
+![VisaInput](.github/assets/visa_input.jpg)
+![VisaList](.github/assets/visa_list.jpg)
 
-Runs the app in the development mode.<br>
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+# Project structure
 
-The page will reload if you make edits.<br>
-You will also see any lint errors in the console.
+## 🛠️ Technologies
 
-### `npm test`
+These are the technologies used throughout the project:
 
-Launches the test runner in the interactive watch mode.<br>
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+- [Node.js][nodejs]
+- [ReactJS](reactjs)
 
-### `npm run build`
+# How to install and run
 
-Builds the app for production to the `build` folder.<br>
-It correctly bundles React in production mode and optimizes the build for the best performance.
+## 📌 Prerequisites
 
-The build is minified and the filenames include the hashes.<br>
-Your app is ready to be deployed!
+You need install:
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+- [Node.js][nodejs] (prefer version 12.17.0 or higher)
+- [Yarn][yarn] (prefer version 1.21.1 or higher)
 
-### `npm run eject`
+Clone this repository:
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+```bash
+# Clone this repository
+$ git clone https://github.com/deividr/formatador-iso.git
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+# Go into the repository
+$ cd formatador-iso
 
-Instead, it will copy all the configuration files and the transitive dependencies (Webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+# Install package's
+$ yarn install
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+# Run script start
+$ yarn start
+```
 
-## Learn More
+# 📝 License
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+This project is under the MIT license. See the [LICENSE](LICENSE) for more information.
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+[nodejs]: https://nodejs.org/
+[reactjs]: https://reactjs.org/
+[yarn]: https://yarnpkg.com/
 
-### Code Splitting
+---
 
-This section has moved here: https://facebook.github.io/create-react-app/docs/code-splitting
-
-### Analyzing the Bundle Size
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size
-
-### Making a Progressive Web App
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app
-
-### Advanced Configuration
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/advanced-configuration
-
-### Deployment
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/deployment
-
-### `npm run build` fails to minify
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify
+For more about [me:crown:](https://www.linkedin.com/in/deivid-assump%C3%A7%C3%A3o-rodrigues-a36a5685/).
