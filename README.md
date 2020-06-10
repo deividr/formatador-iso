@@ -1,6 +1,6 @@
 <div align="center">
-  <h1 style="font-size: 150px">✏️</h1>
-  <h1>Formatador ISO 8583</h1>
+  <img src="./.github/assets/formatter_icon.png" alt="Logo">
+  <h1>ISO-8583 Formatter</h1>
 </div>
 
 This is a financial message formatter in the [ISO 8583](https://pt.wikipedia.org/wiki/ISO_8583) standard, used by companies like VISA, MASTER and ELO.
