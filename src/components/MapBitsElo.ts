@@ -275,6 +275,14 @@ export default [
   },
 
   {
+    bit: 47,
+    tipo: 'lllvar',
+    formato: 'A',
+    tamanho: 999,
+    descricao: 'Dados Adicionais Nacionais',
+  },
+
+  {
     bit: 48,
     tipo: 'lllvar',
     formato: 'A',
