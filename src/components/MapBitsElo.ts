@@ -339,6 +339,14 @@ export default [
   },
 
   {
+    bit: 56,
+    tipo: 'lllvar',
+    formato: 'B',
+    tamanho: 999,
+    descricao: 'Dados Relacionados ao portador',
+  },
+
+  {
     bit: 58,
     tipo: 'lllvar',
     formato: 'A',
