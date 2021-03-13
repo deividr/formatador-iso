@@ -400,7 +400,7 @@ const Elo = (): JSX.Element => {
         let content = state.codigoMensagem.content + bit11 + bit12 + bit13;
 
         content +=
-          bit49 === '846'
+          bit49 === '846' || state.codigoMensagem.content === '0120'
             ? bit38.concat('0000000000000000')
             : bit32.concat(bit33);
 
@@ -421,7 +421,10 @@ const Elo = (): JSX.Element => {
     bits[0] = { ...bits[0], content: mapaCompleto.slice(16) };
 
     // Valorizar o código da mensagem como anulação = 0400.
-    const codigoMensagem = { content: '0400', error: false };
+    const codigoMensagem = {
+      content: state.codigoMensagem.content === '0120' ? '0420' : '0400',
+      error: false,
+    };
 
     // Valorizar o primeiro mapa de bits com os novos bits de anulação.
     const primeiroMapaBits = {
