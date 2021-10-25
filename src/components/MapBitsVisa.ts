@@ -152,6 +152,14 @@ export default [
   },
 
   {
+    bit: 33,
+    tipo: 'llvar',
+    formato: 'P',
+    tamanho: 11,
+    descricao: 'Acquiring Institution Identification Code',
+  },
+
+  {
     bit: 35,
     tipo: 'llvar',
     formato: 'P',
