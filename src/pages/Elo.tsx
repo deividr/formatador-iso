@@ -315,6 +315,11 @@ const Elo = (): JSX.Element => {
     content = bit41.content.substr(0, 2) + bit41.content.substr(4, 4) + bit11;
     bits[idx] = { ...bits[idx], content };
 
+    // Atualizar o bit 38:
+    idx = bits.findIndex((bit: MapBit) => bit.bit === 38);
+    content = (parseInt(bits[idx].content, 10) + 1).toString().padStart(6, '0');
+    bits[idx] = { ...bits[idx], content };
+
     const newState = { ...state, bits };
 
     newState.msgIso = formatarMensagemInput(newState);
