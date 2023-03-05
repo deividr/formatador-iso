@@ -2,7 +2,7 @@ import axios, { AxiosRequestConfig } from 'axios';
 import { getToken } from './auth';
 
 const api = axios.create({
-  baseURL: 'https://formatador-server.herokuapp.com/api',
+  baseURL: 'https://formatador-server.onrender.com/api',
   headers: { 'content-type': 'application/json' },
 });
 
